@@ -1,0 +1,4 @@
+Symlinking /home/nagy/test/devel/lib/libparticle_shooter_plugin.so
+Symlinking /home/nagy/test/devel/lib/pkgconfig/particle_shooter.pc
+Symlinking /home/nagy/test/devel/share/particle_shooter/cmake/particle_shooterConfig-version.cmake
+Symlinking /home/nagy/test/devel/share/particle_shooter/cmake/particle_shooterConfig.cmake

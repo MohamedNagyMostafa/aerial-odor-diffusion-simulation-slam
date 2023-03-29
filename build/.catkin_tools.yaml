@@ -1,0 +1,6 @@
+devel_space: /home/nagy/test/devel
+install: false
+install_space: /home/nagy/test/install
+profile: default
+source_space: /home/nagy/test/src
+workspace: /home/nagy/test

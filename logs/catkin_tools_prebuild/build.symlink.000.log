@@ -1,0 +1,12 @@
+Symlinking /home/nagy/test/devel/./env.sh
+Symlinking /home/nagy/test/devel/./local_setup.zsh
+Symlinking /home/nagy/test/devel/./setup.bash
+Symlinking /home/nagy/test/devel/./setup.sh
+Symlinking /home/nagy/test/devel/./cmake.lock
+Symlinking /home/nagy/test/devel/./setup.zsh
+Symlinking /home/nagy/test/devel/./local_setup.sh
+Symlinking /home/nagy/test/devel/./local_setup.bash
+Symlinking /home/nagy/test/devel/./_setup_util.py
+Symlinking /home/nagy/test/devel/lib/pkgconfig/catkin_tools_prebuild.pc
+Symlinking /home/nagy/test/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig.cmake
+Symlinking /home/nagy/test/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig-version.cmake

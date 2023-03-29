@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/nagy/test/src/particle_shooter/cmake-build-debug/devel/setup.sh

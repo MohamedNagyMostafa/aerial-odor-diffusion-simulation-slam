@@ -1,0 +1,1 @@
+/home/nagy/test/devel/.private/mavlink_sitl_gazebo/share/mavlink_sitl_gazebo/cmake/mavlink_sitl_gazeboConfig.cmake

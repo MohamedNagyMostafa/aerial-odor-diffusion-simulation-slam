@@ -1,0 +1,6 @@
+particle_shooter
+/home/nagy/test/devel/.private/particle_shooter/cmake.lock /home/nagy/test/devel/./cmake.lock
+/home/nagy/test/devel/.private/particle_shooter/lib/libparticle_shooter_plugin.so /home/nagy/test/devel/lib/libparticle_shooter_plugin.so
+/home/nagy/test/devel/.private/particle_shooter/lib/pkgconfig/particle_shooter.pc /home/nagy/test/devel/lib/pkgconfig/particle_shooter.pc
+/home/nagy/test/devel/.private/particle_shooter/share/particle_shooter/cmake/particle_shooterConfig-version.cmake /home/nagy/test/devel/share/particle_shooter/cmake/particle_shooterConfig-version.cmake
+/home/nagy/test/devel/.private/particle_shooter/share/particle_shooter/cmake/particle_shooterConfig.cmake /home/nagy/test/devel/share/particle_shooter/cmake/particle_shooterConfig.cmake

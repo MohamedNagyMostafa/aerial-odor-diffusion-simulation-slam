@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: particle_shooter
+Description: Description of particle_shooter
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp gazebo_ros

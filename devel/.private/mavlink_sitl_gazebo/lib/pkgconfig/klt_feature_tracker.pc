@@ -1,0 +1,8 @@
+prefix=/home/nagy/test/devel/.private/mavlink_sitl_gazebo
+
+Name: klt_feature_tracker
+Description: Description of klt_feature_tracker
+Version: 0.0.0
+Cflags: -I/home/nagy/test/devel/.private/mavlink_sitl_gazebo/include -I/home/nagy/test/src/PX4-SITL_gazebo-classic/external/OpticalFlow/external/klt_feature_tracker/include
+Libs: -L${prefix}/lib -lklt_feature_tracker
+Requires: 

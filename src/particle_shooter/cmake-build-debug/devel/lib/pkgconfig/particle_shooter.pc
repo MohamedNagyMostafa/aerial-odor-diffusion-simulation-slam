@@ -1,0 +1,8 @@
+prefix=/home/nagy/test/src/particle_shooter/cmake-build-debug/devel
+
+Name: particle_shooter
+Description: Description of particle_shooter
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp gazebo_ros

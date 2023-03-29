@@ -1,0 +1,1 @@
+/home/nagy/test/devel/.private/particle_shooter/share/particle_shooter/cmake/particle_shooterConfig-version.cmake
