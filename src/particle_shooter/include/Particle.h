@@ -26,7 +26,7 @@
 class Particle
 {
 public:
-    Particle(std::string& name, float& initTime, float& lifeTime, bool isActive = true)
+    Particle(std::string& name, float_t & initTime, double_t & lifeTime, bool isActive = true)
     {
         _name   = name;
         _initTime   = initTime;
@@ -50,8 +50,8 @@ public:
 
 private:
     std::string _name;
-    float       _initTime;
-    float       _lifeTime;
+    float_t      _initTime;
+    float_t      _lifeTime;
     bool        _isActive;
 
 };

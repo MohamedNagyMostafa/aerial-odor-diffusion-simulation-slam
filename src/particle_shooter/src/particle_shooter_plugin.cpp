@@ -1,12 +1,22 @@
 
 #include "particle_shooter_plugin.h"
 
-
 gazebo::ParticleShooterPlugin::ParticleShooterPlugin() {}
+gazebo::ParticleShooterPlugin::~ParticleShooterPlugin() noexcept
+{
+    ROS_FATAL_STREAM("Free memory stored for particles");
+
+    for(std::shared_ptr<Particle> particle: _worldParticles)
+    {
+        particle.reset();
+    }
+    _worldParticles.clear();
+    ROS_FATAL_STREAM("Memory free completed");
+
+}
 
 void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPtr sdf)
 {
-
     // Check ros is ready.
     if(!ros::isInitialized())
     {
@@ -18,6 +28,51 @@ void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPt
 
     // Define args.
     argsInitialization(sdf);
+
+    // Initialize all particles
+    particlesInitialization();
+}
+
+void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string modelName)
+{
+    sdf::SDFPtr particleSDF = sdf::readFile(PARTICLE_SPHERE_MODEL_SDF_PATH);
+
+    ignition::math::Pose3d particlePose(
+            randomInRange(_sourcePose.X() - _sourcePoseOffsetRadius, _sourcePose.X() + _sourcePoseOffsetRadius),
+            randomInRange(_sourcePose.Y() - _sourcePoseOffsetRadius, _sourcePose.Y() + _sourcePoseOffsetRadius),
+            _sourcePose.Z(),
+            _sourcePose.Roll(),
+            _sourcePose.Pitch(),
+            _sourcePose.Yaw()
+            );
+
+    particleSDF->Root()
+                ->GetElement(Elements::MODEL)
+                ->GetAttribute(Attrs::NAME)
+                ->Set(modelName);
+
+    particleSDF->Root()
+                ->GetElement(Elements::MODEL)
+                ->FindElement(Elements::POSE)
+                ->Set(particlePose);
+
+    this->_world->InsertModelSDF(*particleSDF);
+}
+
+void gazebo::ParticleShooterPlugin::particlesInitialization()
+{
+
+    for(int32_t particleIdx = 0; particleIdx < _numParticles; particleIdx++)
+    {
+
+        float_t time = this->_world->SimTime().Float(); // time in seconds.
+        std::string particleName = "particle_" + std::to_string(particleIdx);
+
+        generateModelByName_Add2World(particleName);
+
+        _worldParticles.push_back(std::shared_ptr<Particle>(new Particle(particleName, time, _particleLifeTime)));
+
+    }
 }
 
 void gazebo::ParticleShooterPlugin::argsInitialization(sdf::ElementPtr &sdf)
@@ -32,7 +87,7 @@ void gazebo::ParticleShooterPlugin::argsInitialization(sdf::ElementPtr &sdf)
         this->_sourcePose   = sdf->Get<ignition::math::Pose3d>(Args::SOURCE_POSE);
     }
 
-    if(sdf->HasElement(Args::SOURCE_POSE_OFFSET_RADIUS)) 
+    if(sdf->HasElement(Args::SOURCE_POSE_OFFSET_RADIUS))
     {
         this->_sourcePoseOffsetRadius   = sdf->Get<double>(Args::SOURCE_POSE_OFFSET_RADIUS);
     }
@@ -48,6 +103,13 @@ void gazebo::ParticleShooterPlugin::argsInitialization(sdf::ElementPtr &sdf)
     }
 }
 
+double_t gazebo::ParticleShooterPlugin::randomInRange(const float_t& min, const float_t& max){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dis(min, max);
+
+    return dis(gen);
+}
 
 
 //
@@ -435,4 +497,4 @@ void gazebo::ParticleShooterPlugin::argsInitialization(sdf::ElementPtr &sdf)
 //
 //}
 
-}
+
