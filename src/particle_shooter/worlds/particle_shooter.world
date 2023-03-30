@@ -49,21 +49,11 @@
 
 
     <plugin name="particle_shooter_plugin" filename="libparticle_shooter_plugin.so">
-      <number_of_particles>100</number_of_particles>
+      <max_capacity>100</max_capacity>
       <source_position>4 3 0.03 0 0 0</source_position>
       <source_position_offsets_radius>0.3</source_position_offsets_radius>
-      <particles_velocity>0.01</particles_velocity>
-      <particles_life_time>10.</particles_life_time>
-    <!--      &lt;!&ndash;      <reset_frequency>10.0</reset_frequency>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <x_axis_force>0.0</x_axis_force>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <y_axis_force>-5000.0</y_axis_force>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <z_axis_force>0.0</z_axis_force>&ndash;&gt;-->
-
-    <!--      &lt;!&ndash;      <x_origin>0.0</x_origin>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <y_origin>0.0</y_origin>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <z_origin>0.5</z_origin>&ndash;&gt;-->
-
-    <!--      &lt;!&ndash;      <random_range>0.5</random_range>&ndash;&gt;-->
+      <source_strength>1</source_strength>
+      <diffusion_coefficient>0.1</diffusion_coefficient>
 
     </plugin>
   </world>

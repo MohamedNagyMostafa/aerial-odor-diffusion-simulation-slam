@@ -2,18 +2,7 @@
 #include "particle_shooter_plugin.h"
 
 gazebo::ParticleShooterPlugin::ParticleShooterPlugin() {}
-gazebo::ParticleShooterPlugin::~ParticleShooterPlugin() noexcept
-{
-    ROS_FATAL_STREAM("Free memory stored for particles");
-
-    for(std::shared_ptr<Particle> particle: _worldParticles)
-    {
-        particle.reset();
-    }
-    _worldParticles.clear();
-    ROS_FATAL_STREAM("Memory free completed");
-
-}
+gazebo::ParticleShooterPlugin::~ParticleShooterPlugin() noexcept {}
 
 void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPtr sdf)
 {
@@ -29,8 +18,11 @@ void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPt
     // Define args.
     argsInitialization(sdf);
 
-    // Initialize all particles
-    particlesInitialization();
+    this->_lastEmitsTime    = 0.f;
+    this->_particleIdx      = 0;
+
+    // Assign plugin listener to update env. status
+    this->listener = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate, this));
 }
 
 void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string modelName)
@@ -56,30 +48,17 @@ void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string mo
                 ->FindElement(Elements::POSE)
                 ->Set(particlePose);
 
+
+
+
     this->_world->InsertModelSDF(*particleSDF);
-}
-
-void gazebo::ParticleShooterPlugin::particlesInitialization()
-{
-
-    for(int32_t particleIdx = 0; particleIdx < _numParticles; particleIdx++)
-    {
-
-        float_t time = this->_world->SimTime().Float(); // time in seconds.
-        std::string particleName = "particle_" + std::to_string(particleIdx);
-
-        generateModelByName_Add2World(particleName);
-
-        _worldParticles.push_back(std::shared_ptr<Particle>(new Particle(particleName, time, _particleLifeTime)));
-
-    }
 }
 
 void gazebo::ParticleShooterPlugin::argsInitialization(sdf::ElementPtr &sdf)
 {
-    if(sdf->HasElement(Args::NUM_PARTICLES))
+    if(sdf->HasElement(Args::Max_Model_Capacity))
     {
-        this->_numParticles = sdf->Get<int>(Args::NUM_PARTICLES);
+        this->_maxModelCapacity = sdf->Get<int>(Args::Max_Model_Capacity);
     }
 
     if(sdf->HasElement(Args::SOURCE_POSE))
@@ -92,15 +71,16 @@ void gazebo::ParticleShooterPlugin::argsInitialization(sdf::ElementPtr &sdf)
         this->_sourcePoseOffsetRadius   = sdf->Get<double>(Args::SOURCE_POSE_OFFSET_RADIUS);
     }
 
-    if(sdf->HasElement(Args::PARTICLE_VELOCITY))
+    if(sdf->HasElement(Args::SOURCE_STRENGTH))
     {
-        this->_particleVelocity         = sdf->Get<double>(Args::PARTICLE_VELOCITY);
+        this->_sourceStrength   = sdf->Get<double>(Args::SOURCE_STRENGTH);
     }
 
-    if(sdf->HasElement(Args::PARTICLE_LIFE_TIME))
+    if(sdf->HasElement(Args::DIFFUSION_COEFFICIENT))
     {
-        this->_particleLifeTime         = sdf->Get<double>(Args::PARTICLE_LIFE_TIME);
+        this->_diffusionCoefficient   = sdf->Get<double>(Args::DIFFUSION_COEFFICIENT);
     }
+
 }
 
 double_t gazebo::ParticleShooterPlugin::randomInRange(const float_t& min, const float_t& max){
@@ -111,6 +91,35 @@ double_t gazebo::ParticleShooterPlugin::randomInRange(const float_t& min, const 
     return dis(gen);
 }
 
+void gazebo::ParticleShooterPlugin::OnUpdate()
+{
+    //////////////////////////////////////
+    ////// Particle Generation Step /////
+    /////////////////////////////////////
+
+    // Compute number of particles needed to be pushed
+    float_t currentTime     = this->_world->SimTime().Float();
+    int32_t  numParticles    = _sourceStrength * abs(currentTime - _lastEmitsTime);
+ 
+    int32_t totalNumModels  = this->_world->Models().size();
+    // Check system capacity.
+    if(numParticles > 0 && totalNumModels - NUM_IRRELEVANT_MODELS_WORLD < _maxModelCapacity)
+    {
+        int32_t availableCapacity   = _maxModelCapacity - (totalNumModels - NUM_IRRELEVANT_MODELS_WORLD);
+        numParticles = (availableCapacity > numParticles)? numParticles: availableCapacity;
+
+        _lastEmitsTime = currentTime;
+
+        for(int32_t i = 0; i < numParticles; i++)
+            generateModelByName_Add2World(PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i));
+
+        _particleIdx += numParticles;
+    }
+
+
+
+
+}
 
 //
 //

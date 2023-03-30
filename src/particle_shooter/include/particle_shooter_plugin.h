@@ -75,23 +75,28 @@ namespace gazebo
 
     private:
         physics::WorldPtr       _world;
-        int32_t                 _numParticles;
+        int32_t                 _maxModelCapacity;
         ignition::math::Pose3d  _sourcePose;
         double_t                _sourcePoseOffsetRadius;
-        double_t                _particleVelocity;
-        double_t                _particleLifeTime;
-        p_vector                _worldParticles;
+        long                    _particleIdx;
+        float_t                 _lastEmitsTime;
+
+        // Diffusion parameters
+        float_t _sourceStrength;        // mole/s
+        float_t _diffusionCoefficient;  // m/s
+
+        event::ConnectionPtr listener;
 
         /**
          * Define plugin arguments.
          */
         struct Args
         {
-            static constexpr const char*  NUM_PARTICLES             = "number_of_particles";
-            static constexpr const char* SOURCE_POSE               = "source_position";
-            static constexpr const char* SOURCE_POSE_OFFSET_RADIUS = "source_position_offsets_radius";
-            static constexpr const char* PARTICLE_VELOCITY         = "particles_velocity";
-            static constexpr const char* PARTICLE_LIFE_TIME        = "particles_life_time";
+            static constexpr const char* Max_Model_Capacity         = "max_capacity";
+            static constexpr const char* SOURCE_POSE                = "source_position";
+            static constexpr const char* SOURCE_POSE_OFFSET_RADIUS  = "source_position_offsets_radius";
+            static constexpr const char* SOURCE_STRENGTH            = "source_strength";
+            static constexpr const char* DIFFUSION_COEFFICIENT      = "diffusion_coefficient";
         };
 
         /**
@@ -112,7 +117,12 @@ namespace gazebo
 
         };
 
-        const char* PARTICLE_SPHERE_MODEL_SDF_PATH = "model://particle_sphere/model.sdf";
+        const char* PARTICLE_SPHERE_MODEL_SDF_PATH  = "model://particle_sphere/model.sdf";
+        const std::string PARTICLE_MODEL_NAME       = "particle_";
+
+        // TODO: This number should adjusted based on the number of other
+        // TODO: models in the world. '3' refers to drone & sun & ground plan models.
+        const int8_t NUM_IRRELEVANT_MODELS_WORLD    = 3;
 
     };
     GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
