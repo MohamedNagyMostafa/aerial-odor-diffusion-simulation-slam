@@ -97,134 +97,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="038621be-cb5e-483f-8b86-963c15a77426" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.catkin_tools/profiles/default/devel_collisions.txt" beforeDir="false" afterPath="$PROJECT_DIR$/.catkin_tools/profiles/default/devel_collisions.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/particle_shooter/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build/particle_shooter/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/devel/.private/particle_shooter/lib/libparticle_shooter_plugin.so" beforeDir="false" afterPath="$PROJECT_DIR$/devel/.private/particle_shooter/lib/libparticle_shooter_plugin.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.cache-manifest.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.check.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.loadenv.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.make.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.026.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.027.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.028.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.029.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.030.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.031.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.032.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.033.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.034.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.mkdir.035.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/mavlink_sitl_gazebo/build.symlink.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.cache-manifest.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.check.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.loadenv.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.016.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.make.017.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.026.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.027.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.028.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.029.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.030.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.031.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.032.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.033.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.034.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.mkdir.035.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.007.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.008.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.009.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.010.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.011.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.012.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.013.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.014.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.015.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/particle_shooter/build.symlink.016.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Firmware/launch/posix_sitl.launch" beforeDir="false" afterPath="$PROJECT_DIR$/src/Firmware/launch/posix_sitl.launch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/particle_shooter/include/Particle.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/particle_shooter/src/particle_shooter_plugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/src/particle_shooter_plugin.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/particle_shooter/worlds/particle_shooter.world" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/worlds/particle_shooter.world" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -274,6 +150,11 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.actionlib_generate_messages_cpp">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="actionlib_generate_messages_cpp" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="particle_shooter" TARGET_NAME="actionlib_generate_messages_cpp" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -754,7 +635,7 @@
       <workItem from="1680116416186" duration="12252000" />
       <workItem from="1680158677557" duration="1911000" />
       <workItem from="1680160602112" duration="16545000" />
-      <workItem from="1680202212610" duration="10305000" />
+      <workItem from="1680202212610" duration="10936000" />
     </task>
     <servers />
   </component>
