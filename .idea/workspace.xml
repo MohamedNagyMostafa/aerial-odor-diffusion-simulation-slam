@@ -99,10 +99,9 @@
     <list default="true" id="038621be-cb5e-483f-8b86-963c15a77426" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Firmware/launch/posix_sitl.launch" beforeDir="false" afterPath="$PROJECT_DIR$/src/Firmware/launch/posix_sitl.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/particle_shooter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/particle_shooter/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/particle_shooter/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/particle_shooter/include/Particle.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/include/Particle.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/particle_shooter/include/particle_shooter_plugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/include/particle_shooter_plugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/particle_shooter/src/particle_shooter_plugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/particle_shooter/src/particle_shooter_plugin.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -636,7 +635,7 @@
       <workItem from="1680084805413" duration="13782000" />
       <workItem from="1680116416186" duration="12252000" />
       <workItem from="1680158677557" duration="1911000" />
-      <workItem from="1680160602112" duration="2908000" />
+      <workItem from="1680160602112" duration="5989000" />
     </task>
     <servers />
   </component>

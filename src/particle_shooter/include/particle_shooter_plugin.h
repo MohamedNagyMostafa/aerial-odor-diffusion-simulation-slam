@@ -26,6 +26,7 @@
 #include <ignition/math/Vector3.hh>
 #include <ignition/math/Quaternion.hh>
 
+
 namespace gazebo
 {
     class ParticleShooterPlugin : public WorldPlugin
@@ -55,7 +56,25 @@ namespace gazebo
          */
         void OnUpdate();
 
+    private:
+        physics::WorldPtr       _world;
+        int                     _numParticles;
+        ignition::math::Pose3d  _sourcePose;
+        double                  _sourcePoseOffsetRadius;
+        double                  _particleVelocity;
+        double                  _particleLifeTime;
+
+        struct Args
+        {
+            static constexpr const char*  NUM_PARTICLES             = "number_of_particles";
+            static constexpr const char* SOURCE_POSE               = "source_position";
+            static constexpr const char* SOURCE_POSE_OFFSET_RADIUS = "source_position_offsets_radius";
+            static constexpr const char* PARTICLE_VELOCITY         = "particles_velocity";
+            static constexpr const char* PARTICLE_LIFE_TIME        = "particles_life_time";
+        };
+
     };
+    GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
 }
 
 

@@ -47,7 +47,7 @@ public:
     }
 
     void reactivate(float& initTime) { _isActive = true; _initTime = initTime; }
-    
+
 private:
     std::string _name;
     float       _initTime;
