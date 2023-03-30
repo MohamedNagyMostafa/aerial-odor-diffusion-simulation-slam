@@ -50,11 +50,6 @@ namespace gazebo
         void argsInitialization(sdf::ElementPtr& sdf);
 
         /**
-         * To generate and intialize particle models in the world.
-         */
-        void particlesInitialization();
-
-        /**
          * Generate a mode with @param modelName name, and insert it to the world.
          * @param modelName model's name to be inserted.
          */
@@ -64,6 +59,20 @@ namespace gazebo
          * Listener for gazebo simulation to update the environment status.
          */
         void OnUpdate();
+
+        /**
+         * Compute concentration of @param particle using Eq. [1/(4.pi.D.t)]^(3/2) exp(-r^2/3Dt)
+         * @param particle a particle from the world.
+         */
+        void computeParticleConcentration(physics::ModelPtr particle, float_t t, sdf::ElementPtr& concentrationElement);
+
+        /**
+         * This function will be called during the simulation time to update particle
+         * location at each time step by computing the displacement.
+         * @param particle a particle in the world.
+         * @param dt interval time between the last update and current time.
+         */
+        void updateParticlePosition(physics::ModelPtr particle, float_t dt);
 
         /**
          * Generate random numbers in range @param min and @param max
@@ -104,8 +113,10 @@ namespace gazebo
          */
         struct Elements
         {
-            static constexpr const char* MODEL  = "model";
-            static constexpr const char* POSE   = "pose";
+            static constexpr const char* MODEL          = "model";
+            static constexpr const char* POSE           = "pose";
+            static constexpr const char* CONCENTRATION  = "concentration";
+
         };
 
         /**

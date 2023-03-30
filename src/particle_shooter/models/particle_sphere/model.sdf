@@ -2,6 +2,8 @@
 <sdf version='1.4'>
   <model name="particle_sphere">
       <static>0</static>
+      <concentration>0</concentration>
+
       <pose> 1 1 1 0 0 0 </pose>
       <lifetime>10.0</lifetime>
       <link name='link'>
@@ -20,6 +22,7 @@
           </inertia>
         </inertial>
         <collision name='collision'>
+
           <geometry>
             <sphere>
               <radius>0.03</radius>

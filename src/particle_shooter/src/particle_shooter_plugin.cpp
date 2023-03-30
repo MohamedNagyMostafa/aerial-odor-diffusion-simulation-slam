@@ -32,7 +32,7 @@ void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string mo
     ignition::math::Pose3d particlePose(
             randomInRange(_sourcePose.X() - _sourcePoseOffsetRadius, _sourcePose.X() + _sourcePoseOffsetRadius),
             randomInRange(_sourcePose.Y() - _sourcePoseOffsetRadius, _sourcePose.Y() + _sourcePoseOffsetRadius),
-            _sourcePose.Z(),
+            randomInRange(_sourcePose.Z() - _sourcePoseOffsetRadius, _sourcePose.Z() + _sourcePoseOffsetRadius),
             _sourcePose.Roll(),
             _sourcePose.Pitch(),
             _sourcePose.Yaw()
@@ -98,10 +98,12 @@ void gazebo::ParticleShooterPlugin::OnUpdate()
     /////////////////////////////////////
 
     // Compute number of particles needed to be pushed
-    float_t currentTime     = this->_world->SimTime().Float();
-    int32_t  numParticles    = _sourceStrength * abs(currentTime - _lastEmitsTime);
- 
-    int32_t totalNumModels  = this->_world->Models().size();
+    float_t currentTime         = this->_world->SimTime().Float();
+    float_t intervalDuration    = abs(currentTime - _lastEmitsTime);
+    int32_t  numParticles       = _sourceStrength * abs(currentTime - _lastEmitsTime);
+
+    int32_t totalNumModels      = this->_world->Models().size();
+
     // Check system capacity.
     if(numParticles > 0 && totalNumModels - NUM_IRRELEVANT_MODELS_WORLD < _maxModelCapacity)
     {
@@ -116,8 +118,73 @@ void gazebo::ParticleShooterPlugin::OnUpdate()
         _particleIdx += numParticles;
     }
 
+    ///////////////////////////////////////////////
+    ////// Update Particle Status in the Env.//////
+    ///////////////////////////////////////////////
+
+    // Update particle concentration, remove particles with zero or negative concentration.
+    for(auto model : this->_world->Models())
+    {
+        if(model->GetName().find(PARTICLE_MODEL_NAME) != std::string::npos)
+        {
+            sdf::ElementPtr concentration;
+
+            // Compute concentration
+            computeParticleConcentration(model, currentTime, concentration);
+
+            // Remove particle with zero or negative concentration.
+            if(concentration->Get<double>() <= 0.00001)
+            {
+                this->_world->RemoveModel(model);
+                continue;
+            }
+            // TODO: Uncomment below line to show the concentration of particle 1 decreasing by time.
+//            if(model->GetName() == PARTICLE_MODEL_NAME+"1")
+//                ROS_FATAL_STREAM("Concentration is " << concentration->Get<double>());
+
+            // Update particle position and transparency.
+//            updateParticlePosition(model, intervalDuration);
+
+        }
+    }
 
 
+
+
+}
+
+void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr particle, float_t dt)
+{
+    ignition::math::Pose3d currentParticlePose = particle->WorldPose();
+
+    double_t dx = sqrt(2 * _diffusionCoefficient * dt);
+    double_t dy = sqrt(2 * _diffusionCoefficient * dt);
+    double_t dz = sqrt(2 * _diffusionCoefficient * dt);
+
+    currentParticlePose.SetX(currentParticlePose.X() + dx);
+    currentParticlePose.SetY(currentParticlePose.Y() + dy);
+    currentParticlePose.SetZ(currentParticlePose.Z() + dz);
+
+    particle->SetRelativePose(currentParticlePose);
+}
+
+void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelPtr particle, float_t t, sdf::ElementPtr& concentrationElement)
+{
+    // Euclidean distance between the particle and the emitter.
+    ignition::math::Pose3 currParticlePose  = particle->WorldPose();
+
+    double_t r  = sqrt(
+            pow(_sourcePose.X() - currParticlePose.X(), 2) +
+            pow(_sourcePose.Y() - currParticlePose.Y(), 2) +
+            pow(_sourcePose.Z() - currParticlePose.Z(), 2));
+
+    // Compute the particle concentration.
+    double_t concentration = pow(1./(4 * M_PI * _diffusionCoefficient * t), 3./2.) * exp(-pow(r,2)/(4 * _diffusionCoefficient * t));
+
+    // Update the concentration in the sdf file.
+    concentrationElement      = particle->GetSDF()->FindElement(Elements::CONCENTRATION);
+
+    concentrationElement->Set(concentration);
 
 }
 
