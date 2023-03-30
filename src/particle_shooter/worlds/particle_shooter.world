@@ -49,10 +49,10 @@
 
 
     <plugin name="particle_shooter_plugin" filename="libparticle_shooter_plugin.so">
-      <max_capacity>100</max_capacity>
+      <max_capacity>300</max_capacity>
       <source_position>4 3 5 0 0 0</source_position>
       <source_position_offsets_radius>0.3</source_position_offsets_radius>
-      <source_strength>1</source_strength>
+      <source_strength>8</source_strength>
       <diffusion_coefficient>0.1</diffusion_coefficient>
 
     </plugin>

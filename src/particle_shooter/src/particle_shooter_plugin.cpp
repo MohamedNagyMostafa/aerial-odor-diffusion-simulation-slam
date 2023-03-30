@@ -133,7 +133,7 @@ void gazebo::ParticleShooterPlugin::OnUpdate()
             computeParticleConcentration(model, currentTime, concentration);
 
             // Remove particle with zero or negative concentration.
-            if(concentration->Get<double>() <= 0.00001)
+            if(concentration->Get<double>() <= 0.0000000001f)
             {
                 this->_world->RemoveModel(model);
                 continue;
@@ -143,7 +143,8 @@ void gazebo::ParticleShooterPlugin::OnUpdate()
 //                ROS_FATAL_STREAM("Concentration is " << concentration->Get<double>());
 
             // Update particle position and transparency.
-//            updateParticlePosition(model, intervalDuration);
+            // TODO: *0.0001 just to make it slow.
+            updateParticlePosition(model, intervalDuration*0.0001);
 
         }
     }
@@ -155,17 +156,21 @@ void gazebo::ParticleShooterPlugin::OnUpdate()
 
 void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr particle, float_t dt)
 {
-    ignition::math::Pose3d currentParticlePose = particle->WorldPose();
+    ignition::math::Pose3 currentParticlePose = particle->WorldPose();
 
     double_t dx = sqrt(2 * _diffusionCoefficient * dt);
     double_t dy = sqrt(2 * _diffusionCoefficient * dt);
     double_t dz = sqrt(2 * _diffusionCoefficient * dt);
 
+    if(particle->GetName() == PARTICLE_MODEL_NAME+"1")
+        ROS_FATAL_STREAM("dx "<< dx << " dy " << dy << " dz " << dz);
+
     currentParticlePose.SetX(currentParticlePose.X() + dx);
     currentParticlePose.SetY(currentParticlePose.Y() + dy);
-    currentParticlePose.SetZ(currentParticlePose.Z() + dz);
+    // TODO: not adding dz to avoid diagonal fly .. we need 2D.
+    currentParticlePose.SetZ(currentParticlePose.Z());
 
-    particle->SetRelativePose(currentParticlePose);
+    particle->SetWorldPose(currentParticlePose);
 }
 
 void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelPtr particle, float_t t, sdf::ElementPtr& concentrationElement)
@@ -179,7 +184,7 @@ void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelP
             pow(_sourcePose.Z() - currParticlePose.Z(), 2));
 
     // Compute the particle concentration.
-    double_t concentration = pow(1./(4 * M_PI * _diffusionCoefficient * t), 3./2.) * exp(-pow(r,2)/(4 * _diffusionCoefficient * t));
+    double_t concentration = pow(_sourceStrength/(4 * M_PI * _diffusionCoefficient * t), 3./2.) * exp(-pow(r,2)/(4 * _diffusionCoefficient * t));
 
     // Update the concentration in the sdf file.
     concentrationElement      = particle->GetSDF()->FindElement(Elements::CONCENTRATION);
