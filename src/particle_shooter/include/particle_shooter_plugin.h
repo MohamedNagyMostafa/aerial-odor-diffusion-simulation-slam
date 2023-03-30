@@ -41,9 +41,19 @@ namespace gazebo
         void Load(physics::WorldPtr world, sdf::ElementPtr sdf);
 
         /**
-         * To initialize
+         * To initialize all plugin args from the sdf file.
          */
-        void argsInitialization();
+        void argsInitialization(sdf::ElementPtr& sdf);
+
+        /**
+         * To generate and intialize particle models in the world.
+         */
+        void particlesInitialization();
+
+        /**
+         * Listener for gazebo simulation to update the environment status.
+         */
+        void OnUpdate();
 
     };
 }

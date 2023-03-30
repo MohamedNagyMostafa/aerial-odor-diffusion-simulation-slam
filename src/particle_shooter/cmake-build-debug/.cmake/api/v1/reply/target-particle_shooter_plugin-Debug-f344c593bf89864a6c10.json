@@ -1125,7 +1125,8 @@
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				1
+				1,
+				2
 			]
 		}
 	],
@@ -1140,6 +1141,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "include/particle_shooter_plugin.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/Particle.h",
 			"sourceGroupIndex" : 1
 		}
 	],
