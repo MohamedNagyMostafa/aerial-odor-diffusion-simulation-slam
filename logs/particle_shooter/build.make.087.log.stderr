@@ -1,0 +1,15 @@
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:[m[K In member function ‘[01m[Kvoid gazebo::ParticleShooterPlugin::generateParticle(const string&)[m[K’:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:56:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Ksdf::v9::Element::AddValue(const char [24])[m[K’
+  130 |             uriElem->AddValue("model://particle_sphere"[01;31m[K)[m[K;
+      |                                                        [01;31m[K^[m[K
+In file included from [01m[K/usr/include/sdformat-9.10/sdf/Actor.hh:25[m[K,
+                 from [01m[K/usr/include/sdformat-9.10/sdf/sdf.hh:2[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:33[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/sdformat-9.10/sdf/Element.hh:217:18:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kvoid sdf::v9::Element::AddValue(const string&, const string&, bool, const string&)[m[K’
+  217 |     public: void [01;36m[KAddValue[m[K(const std::string &_type,
+      |                  [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/sdformat-9.10/sdf/Element.hh:217:18:[m[K [01;36m[Knote: [m[K  candidate expects 4 arguments, 1 provided
+make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:63: CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

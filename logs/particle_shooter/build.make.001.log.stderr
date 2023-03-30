@@ -1,0 +1,21 @@
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:[m[K In member function ‘[01m[Kvirtual void gazebo::ParticleShooterPlugin::Load(gazebo::physics::WorldPtr, sdf::v9::ElementPtr)[m[K’:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:41:13:[m[K [01;31m[Kerror: [m[K‘[01m[K_[m[K’ was not declared in this scope
+   41 |             [01;31m[K_[m[K
+      |             [01;31m[K^[m[K
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:41:13:[m[K [01;36m[Knote: [m[Ksuggested alternatives:
+In file included from [01m[K/usr/include/boost/mpl/aux_/include_preprocessed.hpp:37[m[K,
+                 from [01m[K/usr/include/boost/mpl/placeholders.hpp:43[m[K,
+                 from [01m[K/usr/include/boost/iterator/iterator_categories.hpp:16[m[K,
+                 from [01m[K/usr/include/boost/iterator/iterator_facade.hpp:13[m[K,
+                 from [01m[K/usr/include/boost/filesystem/path.hpp:29[m[K,
+                 from [01m[K/usr/include/boost/filesystem.hpp:16[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:34[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/boost/mpl/aux_/preprocessed/gcc/placeholders.hpp:14:19:[m[K [01;36m[Knote: [m[K  ‘[01m[Kmpl_::_[m[K’
+   14 | typedef arg< -1 > [01;36m[K_[m[K;
+      |                   [01;36m[K^[m[K
+[01m[K/usr/include/boost/mpl/aux_/preprocessed/gcc/placeholders.hpp:14:19:[m[K [01;36m[Knote: [m[K  ‘[01m[Kmpl_::_[m[K’
+[01m[K/usr/include/boost/mpl/aux_/preprocessed/gcc/placeholders.hpp:14:19:[m[K [01;36m[Knote: [m[K  ‘[01m[Kmpl_::_[m[K’
+make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:63: CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

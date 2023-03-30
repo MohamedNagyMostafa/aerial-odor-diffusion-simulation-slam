@@ -1,0 +1,4 @@
+[35m[1mScanning dependencies of target particle_shooter_plugin[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o[0m
+[100%] [32m[1mLinking CXX shared library /home/nagy/test/devel/.private/particle_shooter/lib/libparticle_shooter_plugin.so[0m
+[100%] Built target particle_shooter_plugin

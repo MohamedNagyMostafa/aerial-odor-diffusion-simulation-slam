@@ -16,6 +16,15 @@
     <include>
       <uri>model://asphalt_plane</uri>
     </include>
+
+<!--    <model name="model_particle">-->
+<!--      <include>-->
+<!--        <uri>model://particle_sphere</uri>-->
+<!--      </include>-->
+<!--    </model>-->
+
+
+
     <physics name='default_physics' default='0' type='ode'>
       <gravity>0 0 -9.8066</gravity>
       <ode>

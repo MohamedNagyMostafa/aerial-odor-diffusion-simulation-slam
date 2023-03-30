@@ -1,0 +1,64 @@
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:[m[K In member function ‘[01m[Kvoid gazebo::ParticleShooterPlugin::generateParticle(const string&)[m[K’:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;31m[Kerror: [m[Kclass template argument deduction failed:
+  130 |             particleSDF->Root()->GetElement(MODEL_ELT)->FindElement("pose")->Set(ignition::math::Pose3(0.0, 0.0, 1, 0.0, 0.0, 0.0[01;31m[K)[m[K);
+      |                                                                                                                                  [01;31m[K^[m[K
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KPose3(double, double, int, double, double, double)[m[K’
+In file included from [01m[K/usr/include/sdformat-9.10/sdf/Actor.hh:23[m[K,
+                 from [01m[K/usr/include/sdformat-9.10/sdf/sdf.hh:2[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:33[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:79:15:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T> Pose3(const ignition::math::v6::Pose3<T>&)-> ignition::math::v6::Pose3<T>[m[K’
+   79 |       public: [01;36m[KPose3[m[K(const Pose3<T> &_pose)
+      |               [01;36m[K^~~~~[m[K
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:79:15:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst ignition::math::v6::Pose3<T>[m[K’ and ‘[01m[Kdouble[m[K’
+  130 |             particleSDF->Root()->GetElement(MODEL_ELT)->FindElement("pose")->Set(ignition::math::Pose3(0.0, 0.0, 1, 0.0, 0.0, 0.0[01;36m[K)[m[K);
+      |                                                                                                                                  [01;36m[K^[m[K
+In file included from [01m[K/usr/include/sdformat-9.10/sdf/Actor.hh:23[m[K,
+                 from [01m[K/usr/include/sdformat-9.10/sdf/sdf.hh:2[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:33[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:72:15:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T> Pose3(T, T, T, T, T, T, T)-> ignition::math::v6::Pose3<T>[m[K’
+   72 |       public: [01;36m[KPose3[m[K(T _x, T _y, T _z, T _qw, T _qx, T _qy, T _qz)
+      |               [01;36m[K^~~~~[m[K
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:72:15:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;36m[Knote: [m[K  deduced conflicting types for parameter ‘[01m[KT[m[K’ (‘[01m[Kdouble[m[K’ and ‘[01m[Kint[m[K’)
+  130 |             particleSDF->Root()->GetElement(MODEL_ELT)->FindElement("pose")->Set(ignition::math::Pose3(0.0, 0.0, 1, 0.0, 0.0, 0.0[01;36m[K)[m[K);
+      |                                                                                                                                  [01;36m[K^[m[K
+In file included from [01m[K/usr/include/sdformat-9.10/sdf/Actor.hh:23[m[K,
+                 from [01m[K/usr/include/sdformat-9.10/sdf/sdf.hh:2[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:33[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:59:15:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T> Pose3(T, T, T, T, T, T)-> ignition::math::v6::Pose3<T>[m[K’
+   59 |       public: [01;36m[KPose3[m[K(T _x, T _y, T _z, T _roll, T _pitch, T _yaw)
+      |               [01;36m[K^~~~~[m[K
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:59:15:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;36m[Knote: [m[K  deduced conflicting types for parameter ‘[01m[KT[m[K’ (‘[01m[Kdouble[m[K’ and ‘[01m[Kint[m[K’)
+  130 |             particleSDF->Root()->GetElement(MODEL_ELT)->FindElement("pose")->Set(ignition::math::Pose3(0.0, 0.0, 1, 0.0, 0.0, 0.0[01;36m[K)[m[K);
+      |                                                                                                                                  [01;36m[K^[m[K
+In file included from [01m[K/usr/include/sdformat-9.10/sdf/Actor.hh:23[m[K,
+                 from [01m[K/usr/include/sdformat-9.10/sdf/sdf.hh:2[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:33[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:47:15:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T> Pose3(const ignition::math::v6::Vector3<T>&, const ignition::math::v6::Quaternion<T>&)-> ignition::math::v6::Pose3<T>[m[K’
+   47 |       public: [01;36m[KPose3[m[K(const Vector3<T> &_pos, const Quaternion<T> &_rot)
+      |               [01;36m[K^~~~~[m[K
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:47:15:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst ignition::math::v6::Vector3<T>[m[K’ and ‘[01m[Kdouble[m[K’
+  130 |             particleSDF->Root()->GetElement(MODEL_ELT)->FindElement("pose")->Set(ignition::math::Pose3(0.0, 0.0, 1, 0.0, 0.0, 0.0[01;36m[K)[m[K);
+      |                                                                                                                                  [01;36m[K^[m[K
+In file included from [01m[K/usr/include/sdformat-9.10/sdf/Actor.hh:23[m[K,
+                 from [01m[K/usr/include/sdformat-9.10/sdf/sdf.hh:2[m[K,
+                 from [01m[K/usr/include/gazebo-11/gazebo/common/Plugin.hh:33[m[K,
+                 from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:1[m[K:
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:40:15:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T> Pose3()-> ignition::math::v6::Pose3<T>[m[K’
+   40 |       public: [01;36m[KPose3[m[K() : p(0, 0, 0), q(1, 0, 0, 0)
+      |               [01;36m[K^~~~~[m[K
+[01m[K/usr/include/ignition/math6/gz/math/Pose3.hh:40:15:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;36m[Knote: [m[K  candidate expects 0 arguments, 6 provided
+  130 |             particleSDF->Root()->GetElement(MODEL_ELT)->FindElement("pose")->Set(ignition::math::Pose3(0.0, 0.0, 1, 0.0, 0.0, 0.0[01;36m[K)[m[K);
+      |                                                                                                                                  [01;36m[K^[m[K
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:130:130:[m[K [01;31m[Kerror: [m[Kexpression list treated as compound expression in functional cast [[01;31m[K-fpermissive[m[K]
+make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:63: CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

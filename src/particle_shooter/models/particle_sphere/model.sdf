@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 <sdf version='1.4'>
-  <model name="particle_sphere">      
+  <model name="particle_sphere">
       <static>0</static>
+      <pose> 1 1 1 0 0 0 </pose>
+      <lifetime>10.0</lifetime>
       <link name='link'>
         <inertial>
           <mass>0.25</mass>
