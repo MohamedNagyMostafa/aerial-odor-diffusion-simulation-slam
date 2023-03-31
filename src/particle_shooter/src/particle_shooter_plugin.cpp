@@ -21,8 +21,11 @@ void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPt
     this->_lastEmitsTime    = 0.f;
     this->_particleIdx      = 0;
 
-    // Assign plugin listener to update env. status
-    this->listener = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate, this));
+    // Particle generator thread.
+    this->particleGeneratorEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_particleGenerator, this));
+
+    // Environment update thread.
+    this->environmentUpdateEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_environmentUpdate, this));
 }
 
 void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string modelName)
@@ -91,36 +94,14 @@ double_t gazebo::ParticleShooterPlugin::randomInRange(const float_t& min, const 
     return dis(gen);
 }
 
-void gazebo::ParticleShooterPlugin::OnUpdate()
+void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 {
-    //////////////////////////////////////
-    ////// Particle Generation Step /////
-    /////////////////////////////////////
-
-    // Compute number of particles needed to be pushed
-    float_t currentTime         = this->_world->SimTime().Float();
-    float_t intervalDuration    = abs(currentTime - _lastEmitsTime);
-    int32_t  numParticles       = _sourceStrength * abs(currentTime - _lastEmitsTime);
-
-    int32_t totalNumModels      = this->_world->Models().size();
-
-    // Check system capacity.
-    if(numParticles > 0 && totalNumModels - NUM_IRRELEVANT_MODELS_WORLD < _maxModelCapacity)
-    {
-        int32_t availableCapacity   = _maxModelCapacity - (totalNumModels - NUM_IRRELEVANT_MODELS_WORLD);
-        numParticles = (availableCapacity > numParticles)? numParticles: availableCapacity;
-
-        _lastEmitsTime = currentTime;
-
-        for(int32_t i = 0; i < numParticles; i++)
-            generateModelByName_Add2World(PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i));
-
-        _particleIdx += numParticles;
-    }
-
     ///////////////////////////////////////////////
     ////// Update Particle Status in the Env.//////
     ///////////////////////////////////////////////
+
+    float_t currentTime         = this->_world->SimTime().Float();
+    float_t intervalDuration    = abs(currentTime - _lastEmitsTime);
 
     // Update particle concentration, remove particles with zero or negative concentration.
     for(auto model : this->_world->Models())
@@ -148,9 +129,34 @@ void gazebo::ParticleShooterPlugin::OnUpdate()
 
         }
     }
+}
 
+void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
+{
+    //////////////////////////////////////
+    ////// Particle Generation Step /////
+    /////////////////////////////////////
 
+    // Compute number of particles needed to be pushed
+    float_t currentTime         = this->_world->SimTime().Float();
+    float_t intervalDuration    = abs(currentTime - _lastEmitsTime);
+    int32_t  numParticles       = _sourceStrength * abs(intervalDuration);
 
+    int32_t totalNumModels      = this->_world->Models().size();
+
+    // Check system capacity.
+    if(numParticles > 0 && totalNumModels - NUM_IRRELEVANT_MODELS_WORLD < _maxModelCapacity)
+    {
+        int32_t availableCapacity   = _maxModelCapacity - (totalNumModels - NUM_IRRELEVANT_MODELS_WORLD);
+        numParticles = (availableCapacity > numParticles)? numParticles: availableCapacity;
+
+        _lastEmitsTime = currentTime;
+
+        for(int32_t i = 0; i < numParticles; i++)
+            generateModelByName_Add2World(PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i));
+
+        _particleIdx += numParticles;
+    }
 
 }
 

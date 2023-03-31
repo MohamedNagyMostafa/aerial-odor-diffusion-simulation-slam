@@ -56,9 +56,15 @@ namespace gazebo
         void generateModelByName_Add2World(std::string modelName);
 
         /**
-         * Listener for gazebo simulation to update the environment status.
+         * threading for gazebo simulation to generate particles to the world.
          */
-        void OnUpdate();
+        void OnUpdate_particleGenerator();
+
+        /**
+         * threading for gazebo simulation to update the environment status.
+         */
+        void OnUpdate_environmentUpdate();
+
 
         /**
          * Compute concentration of @param particle using Eq. [1/(4.pi.D.t)]^(3/2) exp(-r^2/3Dt)
@@ -94,7 +100,8 @@ namespace gazebo
         float_t _sourceStrength;        // mole/s
         float_t _diffusionCoefficient;  // m/s
 
-        event::ConnectionPtr listener;
+        event::ConnectionPtr particleGeneratorEvent;
+        event::ConnectionPtr environmentUpdateEvent;
 
         /**
          * Define plugin arguments.
