@@ -1,5 +1,6 @@
 concentration_slam
 /home/nagy/test/devel/.private/concentration_slam/cmake.lock /home/nagy/test/devel/./cmake.lock
+/home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration_plugin.so /home/nagy/test/devel/lib/libdrone_concentration_plugin.so
 /home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so /home/nagy/test/devel/lib/libdrone_concentration.so
 /home/nagy/test/devel/.private/concentration_slam/lib/pkgconfig/concentration_slam.pc /home/nagy/test/devel/lib/pkgconfig/concentration_slam.pc
 /home/nagy/test/devel/.private/concentration_slam/share/concentration_slam/cmake/concentration_slamConfig.cmake /home/nagy/test/devel/share/concentration_slam/cmake/concentration_slamConfig.cmake

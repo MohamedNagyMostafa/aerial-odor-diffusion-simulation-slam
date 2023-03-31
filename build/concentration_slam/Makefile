@@ -90,17 +90,6 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -111,6 +100,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
 
 # Special rule for the target install
 install: preinstall
@@ -166,19 +166,6 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
-
-#=============================================================================
-# Target rules for targets named drone_concentration
-
-# Build rule for target.
-drone_concentration: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 drone_concentration
-.PHONY : drone_concentration
-
-# fast build rule for target.
-drone_concentration/fast:
-	$(MAKE) -f CMakeFiles/drone_concentration.dir/build.make CMakeFiles/drone_concentration.dir/build
-.PHONY : drone_concentration/fast
 
 #=============================================================================
 # Target rules for targets named trajectory_msgs_generate_messages_nodejs
@@ -1143,6 +1130,19 @@ tf_generate_messages_py/fast:
 .PHONY : tf_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named drone_concentration_plugin
+
+# Build rule for target.
+drone_concentration_plugin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 drone_concentration_plugin
+.PHONY : drone_concentration_plugin
+
+# fast build rule for target.
+drone_concentration_plugin/fast:
+	$(MAKE) -f CMakeFiles/drone_concentration_plugin.dir/build.make CMakeFiles/drone_concentration_plugin.dir/build
+.PHONY : drone_concentration_plugin/fast
+
+#=============================================================================
 # Target rules for targets named std_srvs_generate_messages_py
 
 # Build rule for target.
@@ -1363,32 +1363,32 @@ gtest/fast:
 	$(MAKE) -f gtest/googletest/CMakeFiles/gtest.dir/build.make gtest/googletest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
-src/drone_concentration.o: src/drone_concentration.cpp.o
+src/drone_concentration_plugin.o: src/drone_concentration_plugin.cpp.o
 
-.PHONY : src/drone_concentration.o
+.PHONY : src/drone_concentration_plugin.o
 
 # target to build an object file
-src/drone_concentration.cpp.o:
-	$(MAKE) -f CMakeFiles/drone_concentration.dir/build.make CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o
-.PHONY : src/drone_concentration.cpp.o
+src/drone_concentration_plugin.cpp.o:
+	$(MAKE) -f CMakeFiles/drone_concentration_plugin.dir/build.make CMakeFiles/drone_concentration_plugin.dir/src/drone_concentration_plugin.cpp.o
+.PHONY : src/drone_concentration_plugin.cpp.o
 
-src/drone_concentration.i: src/drone_concentration.cpp.i
+src/drone_concentration_plugin.i: src/drone_concentration_plugin.cpp.i
 
-.PHONY : src/drone_concentration.i
+.PHONY : src/drone_concentration_plugin.i
 
 # target to preprocess a source file
-src/drone_concentration.cpp.i:
-	$(MAKE) -f CMakeFiles/drone_concentration.dir/build.make CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.i
-.PHONY : src/drone_concentration.cpp.i
+src/drone_concentration_plugin.cpp.i:
+	$(MAKE) -f CMakeFiles/drone_concentration_plugin.dir/build.make CMakeFiles/drone_concentration_plugin.dir/src/drone_concentration_plugin.cpp.i
+.PHONY : src/drone_concentration_plugin.cpp.i
 
-src/drone_concentration.s: src/drone_concentration.cpp.s
+src/drone_concentration_plugin.s: src/drone_concentration_plugin.cpp.s
 
-.PHONY : src/drone_concentration.s
+.PHONY : src/drone_concentration_plugin.s
 
 # target to generate assembly for a file
-src/drone_concentration.cpp.s:
-	$(MAKE) -f CMakeFiles/drone_concentration.dir/build.make CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.s
-.PHONY : src/drone_concentration.cpp.s
+src/drone_concentration_plugin.cpp.s:
+	$(MAKE) -f CMakeFiles/drone_concentration_plugin.dir/build.make CMakeFiles/drone_concentration_plugin.dir/src/drone_concentration_plugin.cpp.s
+.PHONY : src/drone_concentration_plugin.cpp.s
 
 # Help Target
 help:
@@ -1399,9 +1399,8 @@ help:
 	@echo "... install/strip"
 	@echo "... install/local"
 	@echo "... list_install_components"
-	@echo "... test"
 	@echo "... rebuild_cache"
-	@echo "... drone_concentration"
+	@echo "... test"
 	@echo "... trajectory_msgs_generate_messages_nodejs"
 	@echo "... trajectory_msgs_generate_messages_lisp"
 	@echo "... trajectory_msgs_generate_messages_cpp"
@@ -1478,6 +1477,7 @@ help:
 	@echo "... actionlib_msgs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... tf_generate_messages_py"
+	@echo "... drone_concentration_plugin"
 	@echo "... std_srvs_generate_messages_py"
 	@echo "... geographic_msgs_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_eus"
@@ -1495,9 +1495,9 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
-	@echo "... src/drone_concentration.o"
-	@echo "... src/drone_concentration.i"
-	@echo "... src/drone_concentration.s"
+	@echo "... src/drone_concentration_plugin.o"
+	@echo "... src/drone_concentration_plugin.i"
+	@echo "... src/drone_concentration_plugin.s"
 .PHONY : help
 
 

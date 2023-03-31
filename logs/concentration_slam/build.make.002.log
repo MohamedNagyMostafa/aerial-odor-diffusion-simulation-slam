@@ -1,0 +1,4 @@
+[35m[1mScanning dependencies of target drone_concentration[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o[0m
+[100%] [32m[1mLinking CXX shared library /home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so[0m
+[100%] Built target drone_concentration

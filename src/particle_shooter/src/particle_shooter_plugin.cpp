@@ -148,21 +148,16 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 
         // Multi-threading block
         {
-            th_vector generatorThreads;
+            ThreadPool generatorThreads(numParticles);
+
             for(int32_t i = 0; i < numParticles; i++)
             {
                 std::string particleModelName = PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i);
 
-                generatorThreads.push_back(
-                        std::thread( [this, particleModelName] {
+                generatorThreads.enqueue([this, particleModelName] {
                             generateModelByName_Add2World(particleModelName);
-                        })
-                );
+                        });
             }
-
-
-            for (auto& generatorThread : generatorThreads)
-                generatorThread.join();
 
         }
 
@@ -185,6 +180,8 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 
     // Multi-threading block.
     {
+        ThreadPool statusUpdateThreads(NUM_UPDATE_THREADS);
+
         while(totalTasks > 0)
         {
             beginIdx = endIdx;
@@ -197,17 +194,15 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
             modelIter iterBegin  = models.begin() + beginIdx;
             modelIter iterEnd    = models.begin() + endIdx;
 
-            statusUpdateThreads.push_back(
-                    std::thread([this, iterBegin, iterEnd]{
+            statusUpdateThreads.enqueue(
+                    [this, iterBegin, iterEnd]{
                         updateParticlesInEnv(iterBegin, iterEnd);
-                    }));
+                    });
 
             totalTasks-= (endIdx-beginIdx);
 
         }
 
-        for(auto& statusUpdateThread: statusUpdateThreads)
-            statusUpdateThread.join();
     }
 
 

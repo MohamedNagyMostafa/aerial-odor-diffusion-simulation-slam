@@ -21,7 +21,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <stdio.h>
-#include <thread>
+#include <ThreadPool.h>
 
 #include <ignition/math/Pose3.hh>
 #include <ignition/math/Vector3.hh>

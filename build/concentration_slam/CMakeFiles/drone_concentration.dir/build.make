@@ -57,27 +57,27 @@ include CMakeFiles/drone_concentration.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/drone_concentration.dir/flags.make
 
-CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o: CMakeFiles/drone_concentration.dir/flags.make
-CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o: /home/nagy/test/src/concentration_slam/src/drone_concentration.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nagy/test/build/concentration_slam/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o -c /home/nagy/test/src/concentration_slam/src/drone_concentration.cpp
+CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o: CMakeFiles/drone_concentration.dir/flags.make
+CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o: /home/nagy/test/src/concentration_slam/src/drone_concentration_plugin.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nagy/test/build/concentration_slam/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o -c /home/nagy/test/src/concentration_slam/src/drone_concentration_plugin.cpp
 
-CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nagy/test/src/concentration_slam/src/drone_concentration.cpp > CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.i
+CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nagy/test/src/concentration_slam/src/drone_concentration_plugin.cpp > CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.i
 
-CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nagy/test/src/concentration_slam/src/drone_concentration.cpp -o CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.s
+CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nagy/test/src/concentration_slam/src/drone_concentration_plugin.cpp -o CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.s
 
 # Object files for target drone_concentration
 drone_concentration_OBJECTS = \
-"CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o"
+"CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o"
 
 # External object files for target drone_concentration
 drone_concentration_EXTERNAL_OBJECTS =
 
-/home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so: CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o
+/home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so: CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o
 /home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so: CMakeFiles/drone_concentration.dir/build.make
 /home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so: /opt/ros/noetic/lib/libgazebo_ros_api_plugin.so
 /home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so: /opt/ros/noetic/lib/libgazebo_ros_paths_plugin.so

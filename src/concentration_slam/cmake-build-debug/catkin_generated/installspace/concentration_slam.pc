@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: concentration_slam
+Description: Description of concentration_slam
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lconcentration_slam
+Requires: roscpp gazebo_ros mavros_msgs

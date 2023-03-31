@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "/home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.pdb"
   "/home/nagy/test/devel/.private/concentration_slam/lib/libdrone_concentration.so"
-  "CMakeFiles/drone_concentration.dir/src/drone_concentration.cpp.o"
+  "CMakeFiles/drone_concentration.dir/src/drone_concentration_plugin.cpp.o"
 )
 
 # Per-language clean rules from dependency scanning.
