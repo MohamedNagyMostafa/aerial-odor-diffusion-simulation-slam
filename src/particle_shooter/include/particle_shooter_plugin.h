@@ -21,7 +21,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <stdio.h>
-#include <ThreadPool.h>
+#include <thread>
 
 #include <ignition/math/Pose3.hh>
 #include <ignition/math/Vector3.hh>
@@ -61,6 +61,11 @@ namespace gazebo
          * threading for gazebo simulation to update the environment status.
          */
         void OnUpdate_environmentUpdate();
+
+        /**
+         * threading for gazebo simulation to generate particles in the world.
+         */
+        void OnUpdate_particleGenerator();
 
 
         /**
@@ -103,8 +108,8 @@ namespace gazebo
         float_t _sourceStrength;        // mole/s
         float_t _diffusionCoefficient;  // m/s
 
-        event::ConnectionPtr particleGeneratorEvent;
-        event::ConnectionPtr environmentUpdateEvent;
+        event::ConnectionPtr _particleGeneratorEvent;
+        event::ConnectionPtr _environmentUpdateEvent;
 
         /**
          * Define plugin arguments.

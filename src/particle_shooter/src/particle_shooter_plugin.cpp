@@ -22,7 +22,8 @@ void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPt
     this->_particleIdx      = 0;
 
     // Environment update thread.
-    this->environmentUpdateEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_environmentUpdate, this));
+    this->_environmentUpdateEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_environmentUpdate, this));
+    this->_particleGeneratorEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_particleGenerator, this));
 }
 
 void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string modelName)
@@ -124,8 +125,7 @@ void gazebo::ParticleShooterPlugin::updateParticlesInEnv(modelIter begin, modelI
 }
 
 
-
-void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
+void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
 {
     //////////////////////////////////////
     ////// Particle Generation Step /////
@@ -148,22 +148,32 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 
         // Multi-threading block
         {
-            ThreadPool generatorThreads(numParticles);
-
+            th_vector generatorThreads;
             for(int32_t i = 0; i < numParticles; i++)
             {
                 std::string particleModelName = PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i);
 
-                generatorThreads.enqueue([this, particleModelName] {
+                generatorThreads.push_back(
+                        std::thread( [this, particleModelName] {
                             generateModelByName_Add2World(particleModelName);
-                        });
+                        })
+                );
             }
+
+
+            for (auto& generatorThread : generatorThreads)
+                generatorThread.join();
 
         }
 
 
         _particleIdx += numParticles;
     }
+
+}
+
+void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
+{
 
     ///////////////////////////////////////////////
     ////// Update Particle Status in the Env.//////
@@ -180,8 +190,6 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 
     // Multi-threading block.
     {
-        ThreadPool statusUpdateThreads(NUM_UPDATE_THREADS);
-
         while(totalTasks > 0)
         {
             beginIdx = endIdx;
@@ -194,15 +202,17 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
             modelIter iterBegin  = models.begin() + beginIdx;
             modelIter iterEnd    = models.begin() + endIdx;
 
-            statusUpdateThreads.enqueue(
-                    [this, iterBegin, iterEnd]{
+            statusUpdateThreads.push_back(
+                    std::thread([this, iterBegin, iterEnd]{
                         updateParticlesInEnv(iterBegin, iterEnd);
-                    });
+                    }));
 
             totalTasks-= (endIdx-beginIdx);
 
         }
 
+        for(auto& statusUpdateThread: statusUpdateThreads)
+            statusUpdateThread.join();
     }
 
 

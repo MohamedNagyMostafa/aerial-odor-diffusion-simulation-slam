@@ -81,7 +81,8 @@ void gazebo::DroneConcentrationPlugin::OnDroneLocationListener(const geometry_ms
     ROS_FATAL_STREAM("At the drone location (m^2) number of particles sensed: "
                     <<numSensedParticles
                     << " with concentration "
-                    << concentrationPerMeterSquare);
+                    << concentrationPerMeterSquare
+                    << "C/m^2");
 
 }
 

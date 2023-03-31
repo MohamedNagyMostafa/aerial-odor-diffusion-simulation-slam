@@ -24,11 +24,11 @@ catkin_package(
 
 
 link_directories(${GAZEBO_LIBRARY_DIRS})
-include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS} include ../../../ThreadPool)
+include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS} include)
 
 # For particle_shooter_plugin plugin
 add_library(particle_shooter_plugin src/particle_shooter_plugin.cpp include/particle_shooter_plugin.h)
-target_link_libraries(particle_shooter_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ThreadPool)
+target_link_libraries(particle_shooter_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 
 

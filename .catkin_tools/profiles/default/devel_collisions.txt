@@ -1,1 +1,1 @@
-/home/nagy/test/devel/./cmake.lock 392
+/home/nagy/test/devel/./cmake.lock 404

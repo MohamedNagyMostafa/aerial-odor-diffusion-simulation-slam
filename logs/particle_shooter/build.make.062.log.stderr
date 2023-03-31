@@ -1,0 +1,5 @@
+/usr/bin/ld: cannot find -lThreadPool
+collect2: error: ld returned 1 exit status
+make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:167: /home/nagy/test/devel/.private/particle_shooter/lib/libparticle_shooter_plugin.so] Error 1
+make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2
