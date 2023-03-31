@@ -51,9 +51,6 @@ void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string mo
                 ->FindElement(Elements::POSE)
                 ->Set(particlePose);
 
-
-
-
     this->_world->InsertModelSDF(*particleSDF);
 }
 
