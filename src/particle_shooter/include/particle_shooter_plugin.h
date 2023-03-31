@@ -21,14 +21,14 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <stdio.h>
+#include <thread>
 
 #include <ignition/math/Pose3.hh>
 #include <ignition/math/Vector3.hh>
 #include <ignition/math/Quaternion.hh>
 
-#include <Particle.h>
 
-typedef std::vector<std::shared_ptr<Particle>> p_vector;
+typedef std::vector<std::thread> th_vector;
 
 namespace gazebo
 {
@@ -70,7 +70,7 @@ namespace gazebo
          * Compute concentration of @param particle using Eq. [1/(4.pi.D.t)]^(3/2) exp(-r^2/3Dt)
          * @param particle a particle from the world.
          */
-        void computeParticleConcentration(physics::ModelPtr particle, float_t t, sdf::ElementPtr& concentrationElement);
+        void computeParticleConcentration(physics::ModelPtr& particle, float_t& t, sdf::ElementPtr& concentrationElement);
 
         /**
          * This function will be called during the simulation time to update particle
@@ -78,7 +78,7 @@ namespace gazebo
          * @param particle a particle in the world.
          * @param dt interval time between the last update and current time.
          */
-        void updateParticlePosition(physics::ModelPtr particle, float_t dt);
+        void updateParticlePosition(physics::ModelPtr& particle, float_t& dt);
 
         /**
          * Generate random numbers in range @param min and @param max

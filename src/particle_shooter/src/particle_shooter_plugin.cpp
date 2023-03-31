@@ -98,7 +98,8 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
     ///////////////////////////////////////////////
 
     float_t currentTime         = this->_world->SimTime().Float();
-    float_t intervalDuration    = abs(currentTime - _lastEmitsTime);
+    // TODO: *0.0001 just to make it slow.
+    float_t intervalDuration    = abs(currentTime - _lastEmitsTime) *0.0001;
 
     // Update particle concentration, remove particles with zero or negative concentration.
     for(auto model : this->_world->Models())
@@ -121,8 +122,7 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 //                ROS_FATAL_STREAM("Concentration is " << concentration->Get<double>());
 
             // Update particle position and transparency.
-            // TODO: *0.0001 just to make it slow.
-            updateParticlePosition(model, intervalDuration*0.0001);
+            updateParticlePosition(model, intervalDuration);
 
         }
     }
@@ -149,15 +149,33 @@ void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
 
         _lastEmitsTime = currentTime;
 
-        for(int32_t i = 0; i < numParticles; i++)
-            generateModelByName_Add2World(PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i));
+        // Multi-threading block
+        {
+            th_vector generatorThreads;
+            for(int32_t i = 0; i < numParticles; i++)
+            {
+                std::string particleModelName = PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i);
+
+                generatorThreads.push_back(
+                        std::thread( [this, particleModelName] {
+                            generateModelByName_Add2World(particleModelName);
+                        })
+                );
+            }
+
+
+            for (auto& generatorThread : generatorThreads)
+                generatorThread.join();
+
+        }
+
 
         _particleIdx += numParticles;
     }
 
 }
 
-void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr particle, float_t dt)
+void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr& particle, float_t& dt)
 {
     ignition::math::Pose3 currentParticlePose = particle->WorldPose();
 
@@ -165,8 +183,9 @@ void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr par
     double_t dy = sqrt(2 * _diffusionCoefficient * dt);
     double_t dz = sqrt(2 * _diffusionCoefficient * dt);
 
-    if(particle->GetName() == PARTICLE_MODEL_NAME+"1")
-        ROS_FATAL_STREAM("dx "<< dx << " dy " << dy << " dz " << dz);
+    // TODO: uncomment this line if you would like to trace particle 1 location
+//    if(particle->GetName() == PARTICLE_MODEL_NAME+"1")
+//        ROS_FATAL_STREAM("dx "<< dx << " dy " << dy << " dz " << dz);
 
     currentParticlePose.SetX(currentParticlePose.X() + dx);
     currentParticlePose.SetY(currentParticlePose.Y() + dy);
@@ -176,7 +195,7 @@ void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr par
     particle->SetWorldPose(currentParticlePose);
 }
 
-void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelPtr particle, float_t t, sdf::ElementPtr& concentrationElement)
+void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelPtr& particle, float_t& t, sdf::ElementPtr& concentrationElement)
 {
     // Euclidean distance between the particle and the emitter.
     ignition::math::Pose3 currParticlePose  = particle->WorldPose();

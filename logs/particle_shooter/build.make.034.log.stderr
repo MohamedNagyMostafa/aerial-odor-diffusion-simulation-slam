@@ -1,0 +1,12 @@
+In file included from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:2[m[K:
+[01m[K/home/nagy/test/src/particle_shooter/include/particle_shooter_plugin.h:29:37:[m[K [01;31m[Kerror: [m[K‘[01m[KParticle[m[K’ was not declared in this scope
+   29 | typedef std::vector<std::shared_ptr<[01;31m[KParticle[m[K>> p_vector;
+      |                                     [01;31m[K^~~~~~~~[m[K
+[01m[K/home/nagy/test/src/particle_shooter/include/particle_shooter_plugin.h:29:37:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[01m[K/home/nagy/test/src/particle_shooter/include/particle_shooter_plugin.h:29:45:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   29 | typedef std::vector<std::shared_ptr<Particle[01;31m[K>>[m[K p_vector;
+      |                                             [01;31m[K^~[m[K
+[01m[K/home/nagy/test/src/particle_shooter/include/particle_shooter_plugin.h:29:45:[m[K [01;31m[Kerror: [m[Ktemplate argument 2 is invalid
+make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:63: CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

@@ -1,0 +1,4 @@
+Symlinking /home/nagy/test/devel/lib/libdrone_concentration.so
+Symlinking /home/nagy/test/devel/lib/pkgconfig/concentration_slam.pc
+Symlinking /home/nagy/test/devel/share/concentration_slam/cmake/concentration_slamConfig.cmake
+Symlinking /home/nagy/test/devel/share/concentration_slam/cmake/concentration_slamConfig-version.cmake
