@@ -21,9 +21,6 @@ void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPt
     this->_lastEmitsTime    = 0.f;
     this->_particleIdx      = 0;
 
-    // Particle generator thread.
-    this->particleGeneratorEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_particleGenerator, this));
-
     // Environment update thread.
     this->environmentUpdateEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_environmentUpdate, this));
 }
@@ -91,19 +88,17 @@ double_t gazebo::ParticleShooterPlugin::randomInRange(const float_t& min, const 
     return dis(gen);
 }
 
-void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
+void gazebo::ParticleShooterPlugin::updateParticlesInEnv(modelIter begin, modelIter end)
 {
-    ///////////////////////////////////////////////
-    ////// Update Particle Status in the Env.//////
-    ///////////////////////////////////////////////
-
     float_t currentTime         = this->_world->SimTime().Float();
     // TODO: *0.0001 just to make it slow.
     float_t intervalDuration    = abs(currentTime - _lastEmitsTime) *0.0001;
 
     // Update particle concentration, remove particles with zero or negative concentration.
-    for(auto model : this->_world->Models())
+    for(auto iter = begin; iter != end; iter++)
     {
+        physics::ModelPtr model = *iter;
+
         if(model->GetName().find(PARTICLE_MODEL_NAME) != std::string::npos)
         {
             sdf::ElementPtr concentration;
@@ -128,7 +123,9 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
     }
 }
 
-void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
+
+
+void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 {
     //////////////////////////////////////
     ////// Particle Generation Step /////
@@ -172,6 +169,48 @@ void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
 
         _particleIdx += numParticles;
     }
+
+    ///////////////////////////////////////////////
+    ////// Update Particle Status in the Env.//////
+    ///////////////////////////////////////////////
+
+    m_vector models = this->_world->Models();
+
+    int32_t totalTasks      = models.size() - NUM_IRRELEVANT_MODELS_WORLD;
+    int32_t tasksPerThread  = models.size()/NUM_UPDATE_THREADS;
+    int32_t beginIdx        = 0;
+    int32_t endIdx          = 0;
+
+    th_vector statusUpdateThreads;
+
+    // Multi-threading block.
+    {
+        while(totalTasks > 0)
+        {
+            beginIdx = endIdx;
+            endIdx = beginIdx + ((totalTasks > tasksPerThread)? tasksPerThread : totalTasks);
+
+            // In case less than number of threads
+            if(beginIdx == endIdx)
+                endIdx+=1;
+
+            modelIter iterBegin  = models.begin() + beginIdx;
+            modelIter iterEnd    = models.begin() + endIdx;
+
+            statusUpdateThreads.push_back(
+                    std::thread([this, iterBegin, iterEnd]{
+                        updateParticlesInEnv(iterBegin, iterEnd);
+                    }));
+
+            totalTasks-= (endIdx-beginIdx);
+
+        }
+
+        for(auto& statusUpdateThread: statusUpdateThreads)
+            statusUpdateThread.join();
+    }
+
+
 
 }
 

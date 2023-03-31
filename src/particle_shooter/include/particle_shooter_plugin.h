@@ -29,9 +29,11 @@
 
 
 typedef std::vector<std::thread> th_vector;
-
 namespace gazebo
 {
+    typedef std::vector<physics::ModelPtr> m_vector;
+    typedef m_vector::iterator modelIter;
+
     class ParticleShooterPlugin : public WorldPlugin
     {
     public:
@@ -54,11 +56,6 @@ namespace gazebo
          * @param modelName model's name to be inserted.
          */
         void generateModelByName_Add2World(std::string modelName);
-
-        /**
-         * threading for gazebo simulation to generate particles to the world.
-         */
-        void OnUpdate_particleGenerator();
 
         /**
          * threading for gazebo simulation to update the environment status.
@@ -87,6 +84,12 @@ namespace gazebo
          * @return
          */
         double_t randomInRange(const float_t& min, const float_t& max);
+
+        /**
+         * Update particles status in the world.
+         * @param models vector of particles
+         */
+        void updateParticlesInEnv(modelIter begin, modelIter end);
 
     private:
         physics::WorldPtr       _world;
@@ -142,6 +145,8 @@ namespace gazebo
         // TODO: models in the world. '3' refers to drone & sun & ground plan models.
         const int8_t NUM_IRRELEVANT_MODELS_WORLD    = 3;
 
+
+        const int8_t NUM_UPDATE_THREADS                 = 20;
     };
     GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
 }
