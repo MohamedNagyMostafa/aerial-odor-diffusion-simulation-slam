@@ -1,0 +1,8 @@
+prefix=/home/nagy/test/install
+
+Name: find_source
+Description: Description of find_source
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

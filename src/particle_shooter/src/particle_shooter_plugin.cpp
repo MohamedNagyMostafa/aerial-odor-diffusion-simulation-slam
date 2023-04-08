@@ -180,7 +180,6 @@ void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
 
         _particleIdx += numParticles;
     }
-    ROS_FATAL_STREAM("particle generator update done");
 
 
 
@@ -228,7 +227,6 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
         for(auto& statusUpdateThread: statusUpdateThreads)
             statusUpdateThread.join();
     }
-    ROS_FATAL_STREAM("environment update done");
 
 
 }
