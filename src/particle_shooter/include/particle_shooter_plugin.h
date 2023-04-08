@@ -97,6 +97,9 @@ namespace gazebo
          */
         void updateParticlesInEnv(modelIter begin, modelIter end);
 
+        void connectEnvironmentUpdateBegin();
+
+        void connectParticleGeneratorUpdateBegin();
 
     private:
         physics::WorldPtr       _world;
@@ -112,7 +115,8 @@ namespace gazebo
 
         event::ConnectionPtr _particleGeneratorEvent;
         event::ConnectionPtr _environmentUpdateEvent;
-
+        std::thread _environmentUpdateThread;
+        std::thread _particleGeneratorThread;
         /**
          * Define plugin arguments.
          */

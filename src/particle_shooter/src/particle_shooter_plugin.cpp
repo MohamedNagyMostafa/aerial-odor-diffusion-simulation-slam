@@ -21,8 +21,19 @@ void gazebo::ParticleShooterPlugin::Load(physics::WorldPtr world, sdf::ElementPt
     this->_lastEmitsTime    = 0.f;
     this->_particleIdx      = 0;
 
-    // Environment update thread.
+    this->_environmentUpdateThread  = std::thread(&ParticleShooterPlugin::connectEnvironmentUpdateBegin, this);
+    this->_particleGeneratorThread  = std::thread(&ParticleShooterPlugin::connectParticleGeneratorUpdateBegin, this);
+
+
+}
+
+void gazebo::ParticleShooterPlugin::connectEnvironmentUpdateBegin()
+{
     this->_environmentUpdateEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_environmentUpdate, this));
+}
+
+void gazebo::ParticleShooterPlugin::connectParticleGeneratorUpdateBegin()
+{
     this->_particleGeneratorEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_particleGenerator, this));
 }
 
@@ -169,6 +180,9 @@ void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
 
         _particleIdx += numParticles;
     }
+    ROS_FATAL_STREAM("particle generator update done");
+
+
 
 }
 
@@ -214,7 +228,7 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
         for(auto& statusUpdateThread: statusUpdateThreads)
             statusUpdateThread.join();
     }
-
+    ROS_FATAL_STREAM("environment update done");
 
 
 }
