@@ -234,10 +234,12 @@ void gazebo::ParticleShooterPlugin::OnUpdate_environmentUpdate()
 void gazebo::ParticleShooterPlugin::updateParticlePosition(physics::ModelPtr& particle, float_t& dt)
 {
     ignition::math::Pose3 currentParticlePose = particle->WorldPose();
+    std::default_random_engine generator;
+    std::normal_distribution<double> distribution(0.0, 1.0);
 
-    double_t dx = sqrt(2 * _diffusionCoefficient * dt);
-    double_t dy = sqrt(2 * _diffusionCoefficient * dt);
-    double_t dz = sqrt(2 * _diffusionCoefficient * dt);
+    double_t dx = sqrt(2 * _diffusionCoefficient * dt) * distribution(generator);
+    double_t dy = sqrt(2 * _diffusionCoefficient * dt) * distribution(generator);
+    double_t dz = sqrt(2 * _diffusionCoefficient * dt) * distribution(generator);
 
     // TODO: uncomment this line if you would like to trace particle 1 location
 //    if(particle->GetName() == PARTICLE_MODEL_NAME+"1")

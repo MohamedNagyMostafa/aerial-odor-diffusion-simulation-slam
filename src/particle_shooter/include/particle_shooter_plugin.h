@@ -117,6 +117,8 @@ namespace gazebo
         event::ConnectionPtr _environmentUpdateEvent;
         std::thread _environmentUpdateThread;
         std::thread _particleGeneratorThread;
+
+
         /**
          * Define plugin arguments.
          */
