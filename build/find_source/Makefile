@@ -1316,6 +1316,19 @@ uuid_msgs_generate_messages_py/fast:
 .PHONY : uuid_msgs_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named find_odor_source
+
+# Build rule for target.
+find_odor_source: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 find_odor_source
+.PHONY : find_odor_source
+
+# fast build rule for target.
+find_odor_source/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/find_odor_source.dir/build.make CMakeFiles/find_odor_source.dir/build
+.PHONY : find_odor_source/fast
+
+#=============================================================================
 # Target rules for targets named gmock
 
 # Build rule for target.
@@ -1366,6 +1379,30 @@ gtest_main: cmake_check_build_system
 gtest_main/fast:
 	$(MAKE) $(MAKESILENT) -f gtest/googletest/CMakeFiles/gtest_main.dir/build.make gtest/googletest/CMakeFiles/gtest_main.dir/build
 .PHONY : gtest_main/fast
+
+src/find_odor_source.o: src/find_odor_source.cpp.o
+.PHONY : src/find_odor_source.o
+
+# target to build an object file
+src/find_odor_source.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/find_odor_source.dir/build.make CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o
+.PHONY : src/find_odor_source.cpp.o
+
+src/find_odor_source.i: src/find_odor_source.cpp.i
+.PHONY : src/find_odor_source.i
+
+# target to preprocess a source file
+src/find_odor_source.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/find_odor_source.dir/build.make CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.i
+.PHONY : src/find_odor_source.cpp.i
+
+src/find_odor_source.s: src/find_odor_source.cpp.s
+.PHONY : src/find_odor_source.s
+
+# target to generate assembly for a file
+src/find_odor_source.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/find_odor_source.dir/build.make CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.s
+.PHONY : src/find_odor_source.cpp.s
 
 # Help Target
 help:
@@ -1468,10 +1505,14 @@ help:
 	@echo "... uuid_msgs_generate_messages_lisp"
 	@echo "... uuid_msgs_generate_messages_nodejs"
 	@echo "... uuid_msgs_generate_messages_py"
+	@echo "... find_odor_source"
 	@echo "... gmock"
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... src/find_odor_source.o"
+	@echo "... src/find_odor_source.i"
+	@echo "... src/find_odor_source.s"
 .PHONY : help
 
 

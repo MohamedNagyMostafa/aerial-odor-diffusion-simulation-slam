@@ -104,8 +104,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES find_source
-#  CATKIN_DEPENDS gazebo_ros mavros_msgs roscpp
+  LIBRARIES find_source
+  CATKIN_DEPENDS gazebo_ros mavros_msgs roscpp
 #  DEPENDS system_lib
 )
 
@@ -121,9 +121,9 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/find_source.cpp
-# )
+
+add_library(find_odor_source src/find_odor_source.cpp)
+target_link_libraries(find_odor_source ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

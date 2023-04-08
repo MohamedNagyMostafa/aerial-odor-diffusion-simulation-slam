@@ -20,7 +20,7 @@ void gazebo::DroneConcentrationPlugin::Load(physics::WorldPtr world, sdf::Elemen
     this->_world    = world;
     this->_squareConcentrationRange = 1.; // 1 m^2
 
-    this->_dronePoseConcentrationPublisher  = this->_dronePoseNodeHandler->advertise<std_msgs::Float32>("drone_pose_concentration", 10);
+    this->_dronePoseConcentrationPublisher  = this->_dronePoseNodeHandler->advertise<std_msgs::Float32>(Topic::DRONE_POSE_CONCENTRATION, 10);
 
     // Subscribe to the topic
     this->_dronePoseSubscriber  = this->_dronePoseNodeHandler->subscribe(

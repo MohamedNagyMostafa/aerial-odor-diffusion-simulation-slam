@@ -56,6 +56,7 @@ namespace gazebo
         struct Topic
         {
             static constexpr const char* DRONE_POSE = "/mavros/local_position/pose";
+            static constexpr const char* DRONE_POSE_CONCENTRATION   =   "drone_pose_concentration";
         };
 
         /**

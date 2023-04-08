@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: find_source
+Description: Description of find_source
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib -lfind_source
+Requires: gazebo_ros mavros_msgs roscpp
