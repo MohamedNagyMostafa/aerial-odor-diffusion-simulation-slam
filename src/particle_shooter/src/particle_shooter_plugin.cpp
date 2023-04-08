@@ -258,3 +258,4 @@ void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelP
     concentrationElement->Set(concentration);
 
 }
+

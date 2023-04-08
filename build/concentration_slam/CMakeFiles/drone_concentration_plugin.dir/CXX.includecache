@@ -13,6 +13,8 @@ ros/ros.h
 -
 geometry_msgs/PoseStamped.h
 -
+std_msgs/Float32.h
+-
 gazebo/physics/World.hh
 -
 gazebo/physics/Model.hh
@@ -745,6 +747,22 @@ ros/forwards.h
 /opt/ros/noetic/include/ros/ros/forwards.h
 
 /opt/ros/noetic/include/rosconsole/macros_generated.h
+
+/opt/ros/noetic/include/std_msgs/Float32.h
+string
+-
+vector
+-
+memory
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
 
 /opt/ros/noetic/include/std_msgs/Header.h
 string

@@ -8,6 +8,7 @@
 #include <gazebo/gazebo.hh>
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <std_msgs/Float32.h>
 
 #include <gazebo/physics/World.hh>
 #include <gazebo/physics/Model.hh>
@@ -46,6 +47,7 @@ namespace gazebo
         physics::WorldPtr   _world;
         ros::NodeHandlePtr  _dronePoseNodeHandler;
         ros::Subscriber     _dronePoseSubscriber;
+        ros::Publisher      _dronePoseConcentrationPublisher;
         double_t            _squareConcentrationRange;
 
         /**

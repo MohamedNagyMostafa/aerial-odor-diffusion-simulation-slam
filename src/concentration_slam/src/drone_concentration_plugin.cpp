@@ -20,6 +20,7 @@ void gazebo::DroneConcentrationPlugin::Load(physics::WorldPtr world, sdf::Elemen
     this->_world    = world;
     this->_squareConcentrationRange = 1.; // 1 m^2
 
+    this->_dronePoseConcentrationPublisher  = this->_dronePoseNodeHandler->advertise<std_msgs::Float32>("drone_pose_concentration", 10);
 
     // Subscribe to the topic
     this->_dronePoseSubscriber  = this->_dronePoseNodeHandler->subscribe(
@@ -27,6 +28,7 @@ void gazebo::DroneConcentrationPlugin::Load(physics::WorldPtr world, sdf::Elemen
             1,
             &DroneConcentrationPlugin::OnDroneLocationListener,
             this);
+
 
     ROS_FATAL_STREAM("Concentration Plugin Loaded Successfully");
 }
@@ -78,11 +80,10 @@ void gazebo::DroneConcentrationPlugin::OnDroneLocationListener(const geometry_ms
 
     double_t concentrationPerMeterSquare = concentrationSensedRegion/ pow(_squareConcentrationRange, 2);
 
-    ROS_FATAL_STREAM("At the drone location (m^2) number of particles sensed: "
-                    <<numSensedParticles
-                    << " with concentration "
-                    << concentrationPerMeterSquare
-                    << "C/m^2");
+    std_msgs::Float32 concentrationMsg;
+    concentrationMsg.data   = concentrationPerMeterSquare;
+
+    this->_dronePoseConcentrationPublisher.publish(concentrationMsg);
 
 }
 

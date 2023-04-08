@@ -1,0 +1,10 @@
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:[m[K In member function ‘[01m[Kvoid gazebo::ParticleShooterPlugin::updateParticlePosition(gazebo::physics::ModelPtr&, float_t&)[m[K’:
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:227:38:[m[K [01;31m[Kerror: [m[Kredeclaration of ‘[01m[Kstd::normal_distribution<double> distribution[m[K’
+  227 |     std::normal_distribution<double> [01;31m[Kdistribution[m[K(-1.0, 1.0);
+      |                                      [01;31m[K^~~~~~~~~~~~[m[K
+[01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:226:38:[m[K [01;36m[Knote: [m[K‘[01m[Kstd::normal_distribution<double> distribution[m[K’ previously declared here
+  226 |     std::normal_distribution<double> [01;36m[Kdistribution[m[K(-1.0, 1.0);
+      |                                      [01;36m[K^~~~~~~~~~~~[m[K
+make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:63: CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

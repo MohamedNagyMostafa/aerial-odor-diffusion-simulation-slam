@@ -22,6 +22,7 @@
 #include <gazebo/common/common.hh>
 #include <stdio.h>
 #include <thread>
+#include <random>
 
 #include <ignition/math/Pose3.hh>
 #include <ignition/math/Vector3.hh>
@@ -95,6 +96,7 @@ namespace gazebo
          * @param models vector of particles
          */
         void updateParticlesInEnv(modelIter begin, modelIter end);
+
 
     private:
         physics::WorldPtr       _world;

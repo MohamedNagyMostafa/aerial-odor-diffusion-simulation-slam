@@ -36,6 +36,5 @@
     <mapping directory="$PROJECT_DIR$/src/PX4-SITL_gazebo-classic" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/PX4-SITL_gazebo-classic/external/OpticalFlow" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/PX4-SITL_gazebo-classic/external/OpticalFlow/external/klt_feature_tracker" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/src/particle_shooter/include/ThreadPool" vcs="Git" />
   </component>
 </project>
