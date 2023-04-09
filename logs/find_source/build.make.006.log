@@ -1,3 +1,0 @@
-[ 50%] [32mBuilding CXX object CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o[0m
-[100%] [32m[1mLinking CXX shared library /home/nagy/test/devel/.private/find_source/lib/libfind_odor_source.so[0m
-[100%] Built target find_odor_source

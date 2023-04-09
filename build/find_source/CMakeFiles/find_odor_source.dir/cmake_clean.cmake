@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/nagy/test/devel/.private/find_source/lib/libfind_odor_source.pdb"
-  "/home/nagy/test/devel/.private/find_source/lib/libfind_odor_source.so"
+  "/home/nagy/test/devel/.private/find_source/lib/find_source/find_odor_source"
+  "/home/nagy/test/devel/.private/find_source/lib/find_source/find_odor_source.pdb"
   "CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o"
   "CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o.d"
 )

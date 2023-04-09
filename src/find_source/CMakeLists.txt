@@ -121,8 +121,7 @@ include_directories(
 )
 
 ## Declare a C++ library
-
-add_library(find_odor_source src/find_odor_source.cpp)
+add_executable(find_odor_source src/find_odor_source.cpp)
 target_link_libraries(find_odor_source ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the library
