@@ -42,12 +42,11 @@ bool isReachedTargetPose        = true;
 
 geometry_msgs::PoseStamped  targetPose  ;
 geometry_msgs::PoseStamped  currPose;
+geometry_msgs::PoseStamped  concentrationPose;
 mavros_msgs::State          currDroneMode;
 float_t                     currConcentration;
 
 std::default_random_engine randomGenerator;
-
-ros::Rate rate(20);
 
 
 static const char* NODE_NAME = "find_odor_source";
@@ -72,10 +71,10 @@ struct SetModeType
  */
 struct NeighborNode
 {
-    float_t concentration   = -1;
+    float_t concentration;
     geometry_msgs::PoseStamped pose;
 
-    NeighborNode();
+    NeighborNode()  { concentration = -1;}
     NeighborNode(float concentration, geometry_msgs::PoseStamped& pose): concentration(concentration), pose(pose){}
 };
 
@@ -117,10 +116,14 @@ bool isSameLocation(const geometry_msgs::PoseStamped&, const geometry_msgs::Pose
 
 void moveToLocation(geometry_msgs::PoseStamped&);
 
+void jumpToNextGrid(const geometry_msgs::PoseStamped&);
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, NODE_NAME);
     ros::NodeHandle nodeHandle;
+
+    ros::Rate rate(10);
 
     /// Create subscribers & publishers.
     // Subscribers
@@ -142,7 +145,6 @@ int main(int argc, char** argv)
 
     // Have control on the drone
     setDroneModeToFullControl(setModeClient);
-
 
     // Takeoff the drone
     geometry_msgs::PoseStamped takeoffPose;
@@ -203,20 +205,17 @@ int main(int argc, char** argv)
         else
         {
             ROS_INFO("Found concentration stream");
+            targetPose  = concentrationPose;
+            targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
 
-            if(isDroneInLocation(targetPose))
+            ROS_INFO("Localize the drone towards detected concentration");
+
+            moveToLocation(targetPose);
+            ROS_FATAL_STREAM("found molecule stream");
+
+            if(isConcentrationStreamFound)
             {
-                targetPose  = currPose;
-                targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
-
-                // Send the position to the drone.
-                dronePosePub.publish(targetPose);
-
-                ROS_FATAL_STREAM("found molecule stream");
-
-            }
-            else
-            {
+                ROS_INFO("Begin searching for odor source");
                 // Perform source finding algorithm
                 NeighborNode lastNeighbor;
 
@@ -225,6 +224,8 @@ int main(int argc, char** argv)
                     // Discretization.
                     DiscreteVector droneNeighbors;
                     neighborsDiscretization(droneNeighbors);
+
+                    ROS_INFO_STREAM("Descritize into " << droneNeighbors.size());
 
                     // Move to neighbors and measure concentration.
                     std::priority_queue<NeighborNode, std::vector<NeighborNode>, CompareConcentration> neighborConcentrationQueue;
@@ -260,14 +261,14 @@ int main(int argc, char** argv)
                         break;
                     }
 
-
-                    moveToLocation(maxConcentrationNeighbor.pose);
-
-                    targetPose      =   maxConcentrationNeighbor.pose;
-                    lastNeighbor    =   maxConcentrationNeighbor;
-
-                    if(!isConcentrationStreamFound)
+                    if(maxConcentrationNeighbor.concentration == 0)
                         break;
+
+                    jumpToNextGrid(maxConcentrationNeighbor.pose);
+
+                    moveToLocation(targetPose);
+
+                    lastNeighbor    =   maxConcentrationNeighbor;
 
                 }
             }
@@ -280,6 +281,13 @@ int main(int argc, char** argv)
     return 0;
 }
 
+void jumpToNextGrid(const geometry_msgs::PoseStamped& location)
+{
+    targetPose.pose.position.x  = location.pose.position.x + 2 * (location.pose.position.x - targetPose.pose.position.x);
+    targetPose.pose.position.y  = location.pose.position.y + 2 * (location.pose.position.y - targetPose.pose.position.y);
+    targetPose.pose.position.x  = DRONE_TAKEOFF_ALTITUDE;
+}
+
 void moveToLocation(geometry_msgs::PoseStamped& location)
 {
     location.header.stamp    = ros::Time::now();
@@ -288,16 +296,16 @@ void moveToLocation(geometry_msgs::PoseStamped& location)
     while(ros::ok() && !isDroneInLocation(location))
     {
         dronePosePub.publish(location);
-        rate.sleep();
+        ros::Rate(10).sleep();
         ros::spinOnce();
     }
 }
 
 bool isSameLocation(const geometry_msgs::PoseStamped& location1, const geometry_msgs::PoseStamped& location2)
 {
-    return abs(location1.pose.position.x - location2.pose.position.x) > 0.1 ||
-           abs(location1.pose.position.y - location2.pose.position.y) > 0.1 ||
-           abs(location1.pose.position.z - location2.pose.position.z) > 0.1;
+    return abs(location1.pose.position.x - location2.pose.position.x) <= 0.1 &&
+           abs(location1.pose.position.y - location2.pose.position.y) <= 0.1 &&
+           abs(location1.pose.position.z - location2.pose.position.z) <= 0.1;
 }
 
 bool isDroneInLocation(const geometry_msgs::PoseStamped& location)
@@ -323,6 +331,8 @@ void dronePoseConcentrationCallback(const std_msgs::Float32::ConstPtr& msg)
     isConcentrationStreamFound = (msg->data > 0.);
 
     currConcentration   = msg->data;
+    concentrationPose   = currPose;
+
 }
 
 /**
@@ -412,6 +422,7 @@ void neighborsDiscretization(DiscreteVector& discreteVector)
             geometry_msgs::PoseStamped poseStamped;
             poseStamped.pose.position.x = targetPose.pose.position.x + centriodX;
             poseStamped.pose.position.y = targetPose.pose.position.y + centriodY;
+            poseStamped.pose.position.z = DRONE_TAKEOFF_ALTITUDE;
 
             discreteVector.push_back(poseStamped);
         }
