@@ -1,85 +1,6 @@
 //
 // Created by nagy on 08/04/23.
 //
-
-
-//
-//ros::Publisher pub;
-//geometry_msgs::PoseStamped pose;
-//float requested = 0;
-//
-//#include <ros/ros.h>
-//#include <geometry_msgs/PoseStamped.h>
-//#include <mavros_msgs/CommandBool.h>
-//#include <mavros_msgs/SetMode.h>
-//#include <mavros_msgs/State.h>
-//#include <mavros_msgs/ParamSet.h>
-//#include <mavros_msgs/PositionTarget.h>
-//
-//
-//mavros_msgs::State current_state;
-//void state_cb(const mavros_msgs::State::ConstPtr& msg) {
-//    current_state = *msg;
-//}
-//
-//int main(int argc, char** argv) {
-//    ros::init(argc, argv, "find_odor_source");
-//    ros::NodeHandle nh;
-//
-//    ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>("mavros/state", 10, state_cb);
-//    ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>("mavros/cmd/arming");
-//    ros::ServiceClient takeoff_client = nh.serviceClient<mavros_msgs::CommandTOL>("mavros/cmd/takeoff");
-//    ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>("mavros/set_mode");
-//    ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>("mavros/setpoint_position/local", 10);
-//
-//    // wait for FCU connection
-//    while (ros::ok() && !current_state.connected) {
-//        ros::spinOnce();
-//        ros::Rate(20).sleep();
-//    }
-//
-//    // arm the drone
-//    mavros_msgs::CommandBool arm_cmd;
-//    arm_cmd.request.value = true;
-//    if (arming_client.call(arm_cmd) && arm_cmd.response.success) {
-//        ROS_INFO("Vehicle armed");
-//    } else {
-//        ROS_ERROR("Failed to arm vehicle");
-//        return -1;
-//    }
-//
-//    // set mode to OFFBOARD
-//    mavros_msgs::SetMode offboard_set_mode;
-//    offboard_set_mode.request.custom_mode = "OFFBOARD";
-//    if (set_mode_client.call(offboard_set_mode) && offboard_set_mode.response.mode_sent) {
-//        ROS_INFO("Offboard enabled");
-//    } else {
-//        ROS_ERROR("Failed to enable offboard");
-//        return -1;
-//    }
-//
-//
-//
-//
-//    // set the target position
-//    geometry_msgs::PoseStamped pose_cmd;
-//    pose_cmd.header.stamp = ros::Time::now();
-//    pose_cmd.header.frame_id = "map";
-//    pose_cmd.pose.position.x = 5.0;  // move forward 5 meters
-//    pose_cmd.pose.position.y = 0.0;  // maintain current y position
-//    pose_cmd.pose.position.z = 5.0;  // maintain current z position
-//
-//    while (ros::ok()) {
-//
-//        local_pos_pub.publish(pose_cmd);
-//
-//        ros::spinOnce();
-//        ros::Rate(20).sleep();
-//    }
-//    return 0;
-//}
-
-
 #include <ros/ros.h>
 
 #include <geometry_msgs/PoseStamped.h>
@@ -94,6 +15,7 @@
 #include <mavros_msgs/State.h>
 
 #include <random>
+#include <queue>
 
 
 #define WORLD_BOUNDARY_MIN_X    -40.
@@ -103,8 +25,12 @@
 #define WORLD_BOUNDARY_MAX_Y    40.
 #define WORLD_BOUNDARY_MAX_Z    40.
 #define DRONE_TAKEOFF_ALTITUDE  6.
+#define SENSOR_RANGE            1.
 #define SUCCESS_RUN             0
 #define FAILED_RUN               -1
+
+
+typedef std::vector<geometry_msgs::PoseStamped> DiscreteVector;
 
 ros::Subscriber dronePoseSub;
 ros::Subscriber dronePoseConcentrationSub;
@@ -112,14 +38,16 @@ ros::Subscriber droneModeSub;
 ros::Publisher  dronePosePub;
 
 bool isConcentrationStreamFound = false;
-bool isOdorSourceFound          = false;
 bool isReachedTargetPose        = true;
 
 geometry_msgs::PoseStamped  targetPose  ;
 geometry_msgs::PoseStamped  currPose;
 mavros_msgs::State          currDroneMode;
+float_t                     currConcentration;
 
 std::default_random_engine randomGenerator;
+
+ros::Rate rate(20);
 
 
 static const char* NODE_NAME = "find_odor_source";
@@ -139,6 +67,29 @@ struct SetModeType
     static constexpr const char* OFF_BOARD                  = "OFFBOARD";
 };
 
+/**
+ * Data structure for neighbor locations
+ */
+struct NeighborNode
+{
+    float_t concentration   = -1;
+    geometry_msgs::PoseStamped pose;
+
+    NeighborNode();
+    NeighborNode(float concentration, geometry_msgs::PoseStamped& pose): concentration(concentration), pose(pose){}
+};
+
+/**
+ * Operator to make comparison for priority queue.
+ */
+struct CompareConcentration
+{
+    bool operator()(NeighborNode const& node1, NeighborNode const& node2)
+    {
+        return node1.concentration < node2.concentration;
+    }
+};
+
 void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr);
 
 void dronePoseConcentrationCallback(const std_msgs::Float32::ConstPtr&);
@@ -152,6 +103,19 @@ void waitForStateConnection();
 void makeDroneArmed(ros::ServiceClient&);
 
 void setDroneModeToFullControl(ros::ServiceClient&);
+
+void neighborsDiscretization(DiscreteVector&);
+
+/**
+ * Check whether the drone at certain location @param location or not.
+ * @param location location to check
+ * @return
+ */
+bool isDroneInLocation(const geometry_msgs::PoseStamped&);
+
+bool isSameLocation(const geometry_msgs::PoseStamped&, const geometry_msgs::PoseStamped& );
+
+void moveToLocation(geometry_msgs::PoseStamped&);
 
 int main(int argc, char** argv)
 {
@@ -187,8 +151,6 @@ int main(int argc, char** argv)
     takeoffPose.pose.position.x = 0.0;
     takeoffPose.pose.position.y = 0.0;
     takeoffPose.pose.position.z = DRONE_TAKEOFF_ALTITUDE;
-
-    ros::Rate rate(20);
 
     while(ros::ok() && (currDroneMode.mode != SetModeType::OFF_BOARD || abs(currPose.pose.position.z - takeoffPose.pose.position.z) > 0.1 ))
     {
@@ -242,13 +204,11 @@ int main(int argc, char** argv)
         {
             ROS_INFO("Found concentration stream");
 
-            if(abs(currPose.pose.position.x - targetPose.pose.position.x) > 0.1 ||
-                    abs(currPose.pose.position.y - targetPose.pose.position.y) > 0.1)
-                    //abs(currPose.pose.position.z - targetPose.pose.position.z) > 0.1 )
+            if(isDroneInLocation(targetPose))
             {
                 targetPose  = currPose;
                 targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
-                
+
                 // Send the position to the drone.
                 dronePosePub.publish(targetPose);
 
@@ -257,8 +217,59 @@ int main(int argc, char** argv)
             }
             else
             {
-                // Hold the drone
-                dronePosePub.publish(targetPose);
+                // Perform source finding algorithm
+                NeighborNode lastNeighbor;
+
+                while(ros::ok())
+                {
+                    // Discretization.
+                    DiscreteVector droneNeighbors;
+                    neighborsDiscretization(droneNeighbors);
+
+                    // Move to neighbors and measure concentration.
+                    std::priority_queue<NeighborNode, std::vector<NeighborNode>, CompareConcentration> neighborConcentrationQueue;
+
+                    for(geometry_msgs::PoseStamped& neighborPose: droneNeighbors)
+                    {
+                        moveToLocation(neighborPose);
+                        NeighborNode neighborNode(currConcentration, neighborPose);
+                        neighborConcentrationQueue.push(neighborNode);
+                    }
+
+                    // Pick max location
+                    NeighborNode maxConcentrationNeighbor   = neighborConcentrationQueue.top();
+
+                    // Check found source! (Either stay at the middle or previous with more concentration).
+                    if(isSameLocation(maxConcentrationNeighbor.pose, targetPose) || (lastNeighbor.concentration != -1 && lastNeighbor.concentration > maxConcentrationNeighbor.concentration))
+                    {
+                        ROS_INFO("Drone found odor source.");\
+                        targetPose  = (isSameLocation(maxConcentrationNeighbor.pose, targetPose))? targetPose : lastNeighbor.pose;
+
+                        while(ros::ok())
+                        {
+                            if(isReachedTargetPose && !isConcentrationStreamFound) break;
+
+                            targetPose.header.stamp = ros::Time::now();
+                            targetPose.header.frame_id  = "map";
+
+                            dronePosePub.publish(targetPose);
+
+                            rate.sleep();
+                            ros::spinOnce();
+                        }
+                        break;
+                    }
+
+
+                    moveToLocation(maxConcentrationNeighbor.pose);
+
+                    targetPose      =   maxConcentrationNeighbor.pose;
+                    lastNeighbor    =   maxConcentrationNeighbor;
+
+                    if(!isConcentrationStreamFound)
+                        break;
+
+                }
             }
         }
 
@@ -267,6 +278,31 @@ int main(int argc, char** argv)
     }
 
     return 0;
+}
+
+void moveToLocation(geometry_msgs::PoseStamped& location)
+{
+    location.header.stamp    = ros::Time::now();
+    location.header.frame_id = "map";
+
+    while(ros::ok() && !isDroneInLocation(location))
+    {
+        dronePosePub.publish(location);
+        rate.sleep();
+        ros::spinOnce();
+    }
+}
+
+bool isSameLocation(const geometry_msgs::PoseStamped& location1, const geometry_msgs::PoseStamped& location2)
+{
+    return abs(location1.pose.position.x - location2.pose.position.x) > 0.1 ||
+           abs(location1.pose.position.y - location2.pose.position.y) > 0.1 ||
+           abs(location1.pose.position.z - location2.pose.position.z) > 0.1;
+}
+
+bool isDroneInLocation(const geometry_msgs::PoseStamped& location)
+{
+    return isSameLocation(currPose, location);
 }
 
 /**
@@ -285,6 +321,8 @@ void droneStateCallback(const mavros_msgs::State droneStateMsg)
 void dronePoseConcentrationCallback(const std_msgs::Float32::ConstPtr& msg)
 {
     isConcentrationStreamFound = (msg->data > 0.);
+
+    currConcentration   = msg->data;
 }
 
 /**
@@ -362,5 +400,20 @@ void setDroneModeToFullControl(ros::ServiceClient& setModeServClient)
     {
         ROS_ERROR("Failed to enable OFFBOARD");
         exit(FAILED_RUN);
+    }
+}
+
+void neighborsDiscretization(DiscreteVector& discreteVector)
+{
+    for(std::int16_t centriodX = -2 * SENSOR_RANGE; centriodX < 2 * SENSOR_RANGE + 1; centriodX+= 2*SENSOR_RANGE)
+    {
+        for(std::int16_t centriodY = -2 * SENSOR_RANGE; centriodY < 2 * SENSOR_RANGE + 1; centriodY+= 2*SENSOR_RANGE)
+        {
+            geometry_msgs::PoseStamped poseStamped;
+            poseStamped.pose.position.x = targetPose.pose.position.x + centriodX;
+            poseStamped.pose.position.y = targetPose.pose.position.y + centriodY;
+
+            discreteVector.push_back(poseStamped);
+        }
     }
 }
