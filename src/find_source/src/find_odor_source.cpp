@@ -96,12 +96,12 @@
 #include <random>
 
 
-#define WORLD_BOUNDARY_MIN_X    -100.
-#define WORLD_BOUNDARY_MIN_Y    -100.
-#define WORLD_BOUNDARY_MIN_Z    -100.
-#define WORLD_BOUNDARY_MAX_X    100.
-#define WORLD_BOUNDARY_MAX_Y    100.
-#define WORLD_BOUNDARY_MAX_Z    100.
+#define WORLD_BOUNDARY_MIN_X    -40.
+#define WORLD_BOUNDARY_MIN_Y    -40.
+#define WORLD_BOUNDARY_MIN_Z    -40.
+#define WORLD_BOUNDARY_MAX_X    40.
+#define WORLD_BOUNDARY_MAX_Y    40.
+#define WORLD_BOUNDARY_MAX_Z    40.
 #define DRONE_TAKEOFF_ALTITUDE  6.
 #define SUCCESS_RUN             0
 #define FAILED_RUN               -1
@@ -188,76 +188,83 @@ int main(int argc, char** argv)
     takeoffPose.pose.position.y = 0.0;
     takeoffPose.pose.position.z = DRONE_TAKEOFF_ALTITUDE;
 
+    ros::Rate rate(20);
+
     while(ros::ok() && (currDroneMode.mode != SetModeType::OFF_BOARD || abs(currPose.pose.position.z - takeoffPose.pose.position.z) > 0.1 ))
     {
         dronePosePub.publish(takeoffPose);
         ros::spinOnce();
-        ros::Rate(20).sleep();
+        rate.sleep();
     }
 
     ROS_INFO("Drone Successfully takeoff");
 
+    // Initial target
+    targetPose.pose.position.x  = NAN;
+    targetPose.pose.position.y  = NAN;
+    targetPose.pose.position.z  = NAN;
 
-    // Keep drone position.
-    geometry_msgs::PoseStamped  dronePose = takeoffPose;
+    isReachedTargetPose         = true;
 
     while(ros::ok())
     {
-        dronePosePub.publish(takeoffPose);
+        if(!isConcentrationStreamFound)
+        {
+            ROS_INFO("No concentration found");
+
+            // Search randomly
+            if(isReachedTargetPose)
+            {
+                targetPose.header.stamp = ros::Time::now();
+                targetPose.header.frame_id = "map";
+
+                // Get a new pose.
+                randomPose(WORLD_BOUNDARY_MIN_X, WORLD_BOUNDARY_MAX_X, targetPose.pose.position.x);
+                randomPose(WORLD_BOUNDARY_MIN_Y, WORLD_BOUNDARY_MAX_Y, targetPose.pose.position.y);
+                //randomPose(WORLD_BOUNDARY_MIN_Z, WORLD_BOUNDARY_MAX_Z, targetPose.pose.position.z);
+
+                targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
+
+                isReachedTargetPose = false;
+
+                // Send the position to the drone.
+                dronePosePub.publish(targetPose);
+
+                ROS_FATAL_STREAM("A new target is installed");
+            }
+            else
+            {
+                dronePosePub.publish(targetPose);
+            }
+
+        }
+        else
+        {
+            ROS_INFO("Found concentration stream");
+
+            if(abs(currPose.pose.position.x - targetPose.pose.position.x) > 0.1 ||
+                    abs(currPose.pose.position.y - targetPose.pose.position.y) > 0.1)
+                    //abs(currPose.pose.position.z - targetPose.pose.position.z) > 0.1 )
+            {
+                targetPose  = currPose;
+                targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
+                
+                // Send the position to the drone.
+                dronePosePub.publish(targetPose);
+
+                ROS_FATAL_STREAM("found molecule stream");
+
+            }
+            else
+            {
+                // Hold the drone
+                dronePosePub.publish(targetPose);
+            }
+        }
+
+        rate.sleep();
         ros::spinOnce();
-        ros::Rate(20).sleep();
     }
-//
-//    ros::Rate rate(10);
-//
-//    while(ros::ok())
-//    {
-//        if(!isConcentrationStreamFound)
-//        {
-//            // Search randomly
-//            if(isReachedTargetPose)
-//            {
-//                // Get a new pose.
-//                randomPose(WORLD_BOUNDARY_MIN_X, WORLD_BOUNDARY_MAX_X, targetPose.pose.position.x);
-//                randomPose(WORLD_BOUNDARY_MIN_Y, WORLD_BOUNDARY_MAX_Y, targetPose.pose.position.y);
-//                //randomPose(WORLD_BOUNDARY_MIN_Z, WORLD_BOUNDARY_MAX_Z, targetPose.pose.position.z);
-//
-//                targetPose.pose.position.z  = DRONE_ATTITUDE;
-//                targetPose.pose.position.x  = 5.0;
-//                targetPose.pose.position.y  = 5.0;
-//
-//                targetPose.header.stamp = ros::Time::now();
-//                targetPose.header.frame_id = "map";
-//                targetPose.pose.orientation.w = 1.0;
-//
-//                isReachedTargetPose = false;
-//
-//                // Send the position to the drone.
-//                dronePosePub.publish(targetPose);
-//
-//                ROS_FATAL_STREAM("A new target is installed");
-//            }
-//
-//        }
-//        else
-//        {
-//            if(currPose != targetPose)
-//            {
-//                targetPose  = currPose;
-//
-//                // Send the position to the drone.
-//                dronePosePub.publish(targetPose);
-//
-//                ROS_FATAL_STREAM("found molecule stream");
-//
-//            }
-//
-//            // Hold the drone
-//        }
-//
-//        rate.sleep();
-//        ros::spinOnce();
-//    }
 
     return 0;
 }
@@ -291,9 +298,9 @@ void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr msg)
     currPose.pose.position.z    =   msg->pose.position.z;
 
     isReachedTargetPose =   (isnan(targetPose.pose.position.x) || isnan(targetPose.pose.position.x) || isnan(targetPose.pose.position.x)) ||
-            (currPose.pose.position.x == targetPose.pose.position.x) &&
-            (currPose.pose.position.y   ==  targetPose.pose.position.y) &&
-            (currPose.pose.position.z   ==  targetPose.pose.position.z);
+            (abs(currPose.pose.position.x - targetPose.pose.position.x) < 0.1) &&
+            (abs(currPose.pose.position.y   ==  targetPose.pose.position.y)  < 0.1) &&
+            (abs(currPose.pose.position.z   ==  targetPose.pose.position.z)  < 0.1);
 
 }
 
