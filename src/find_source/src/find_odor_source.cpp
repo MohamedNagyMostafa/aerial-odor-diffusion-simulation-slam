@@ -27,7 +27,7 @@
 #define DRONE_TAKEOFF_ALTITUDE  6.
 #define SENSOR_RANGE            1.
 #define SUCCESS_RUN             0
-#define FAILED_RUN               -1
+#define FAILED_RUN              -1
 
 
 typedef std::vector<geometry_msgs::PoseStamped> DiscreteVector;
@@ -51,6 +51,9 @@ std::default_random_engine randomGenerator;
 
 static const char* NODE_NAME = "find_odor_source";
 
+/**
+ * Topics for publishers/subscribers/services
+ */
 struct Topic
 {
     static constexpr const char* DRONE_POSE                 = "/mavros/local_position/pose";
@@ -61,6 +64,9 @@ struct Topic
     static constexpr const char* SET_MODE                   = "/mavros/set_mode";
 };
 
+/**
+ * Define drone modes
+ */
 struct SetModeType
 {
     static constexpr const char* OFF_BOARD                  = "OFFBOARD";
@@ -88,6 +94,7 @@ struct CompareConcentration
         return node1.concentration < node2.concentration;
     }
 };
+
 
 void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr);
 
@@ -278,9 +285,13 @@ int main(int argc, char** argv)
         ros::spinOnce();
     }
 
-    return 0;
+    return SUCCESS_RUN;
 }
 
+/**
+ * Move to the middle of the next discretized grid given gradient result.
+ * @param location
+ */
 void jumpToNextGrid(const geometry_msgs::PoseStamped& location)
 {
     targetPose.pose.position.x  = location.pose.position.x + 2 * (location.pose.position.x - targetPose.pose.position.x);
@@ -288,6 +299,11 @@ void jumpToNextGrid(const geometry_msgs::PoseStamped& location)
     targetPose.pose.position.x  = DRONE_TAKEOFF_ALTITUDE;
 }
 
+/**
+ * Given certain location, move the drone to @param location, function terminates
+ * once the drone reaches the desired location.
+ * @param location
+ */
 void moveToLocation(geometry_msgs::PoseStamped& location)
 {
     location.header.stamp    = ros::Time::now();
@@ -301,6 +317,12 @@ void moveToLocation(geometry_msgs::PoseStamped& location)
     }
 }
 
+/**
+ * Check two locations are same under certain sensor's measurement error.
+ * @param location1
+ * @param location2
+ * @return
+ */
 bool isSameLocation(const geometry_msgs::PoseStamped& location1, const geometry_msgs::PoseStamped& location2)
 {
     return abs(location1.pose.position.x - location2.pose.position.x) <= 0.1 &&
@@ -308,6 +330,11 @@ bool isSameLocation(const geometry_msgs::PoseStamped& location1, const geometry_
            abs(location1.pose.position.z - location2.pose.position.z) <= 0.1;
 }
 
+/**
+ * Check whether the drone at @param location or not.
+ * @param location
+ * @return
+ */
 bool isDroneInLocation(const geometry_msgs::PoseStamped& location)
 {
     return isSameLocation(currPose, location);
@@ -413,6 +440,10 @@ void setDroneModeToFullControl(ros::ServiceClient& setModeServClient)
     }
 }
 
+/**
+ * Generate discretization for neighbor region next to the drone.
+ * @param discreteVector
+ */
 void neighborsDiscretization(DiscreteVector& discreteVector)
 {
     for(std::int16_t centriodX = -2 * SENSOR_RANGE; centriodX < 2 * SENSOR_RANGE + 1; centriodX+= 2*SENSOR_RANGE)
