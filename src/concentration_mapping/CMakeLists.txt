@@ -129,7 +129,7 @@ link_directories(${OpenCV_LIBRARY_DIRS})
 add_definitions(${OpenCV_DEFINITIONS})
 
 add_executable(concentration_mapping src/concentration_mapping.cpp)
-target_link_libraries(concentration_mapping ${catkin_LIBRARIES})
+target_link_libraries(concentration_mapping ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

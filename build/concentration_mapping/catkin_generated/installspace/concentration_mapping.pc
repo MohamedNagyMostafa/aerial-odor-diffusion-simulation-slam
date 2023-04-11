@@ -1,0 +1,8 @@
+prefix=/home/nagy/test/install
+
+Name: concentration_mapping
+Description: Description of concentration_mapping
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib -lconcentration_mapping
+Requires: mavros_msgs roscpp

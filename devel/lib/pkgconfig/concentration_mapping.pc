@@ -1,0 +1,1 @@
+/home/nagy/test/devel/.private/concentration_mapping/lib/pkgconfig/concentration_mapping.pc

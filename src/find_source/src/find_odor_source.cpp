@@ -298,7 +298,11 @@ void jumpToNextGrid(const geometry_msgs::PoseStamped& location)
 {
     targetPose.pose.position.x  = location.pose.position.x + 2 * (location.pose.position.x - targetPose.pose.position.x);
     targetPose.pose.position.y  = location.pose.position.y + 2 * (location.pose.position.y - targetPose.pose.position.y);
-    targetPose.pose.position.x  = DRONE_TAKEOFF_ALTITUDE;
+    targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
+
+//    targetPose.pose.position.x  = location.pose.position.x;// + 2 * (location.pose.position.x - targetPose.pose.position.x);
+//    targetPose.pose.position.y  = location.pose.position.y;// + 2 * (location.pose.position.y - targetPose.pose.position.y);
+//    targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
 }
 
 /**
