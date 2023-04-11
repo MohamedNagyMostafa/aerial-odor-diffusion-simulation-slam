@@ -13,17 +13,17 @@
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
-
+cd ..
 #include <random>
 #include <queue>
+#include <thread>
 
-
-#define WORLD_BOUNDARY_MIN_X    -40.
-#define WORLD_BOUNDARY_MIN_Y    -40.
-#define WORLD_BOUNDARY_MIN_Z    -40.
-#define WORLD_BOUNDARY_MAX_X    40.
-#define WORLD_BOUNDARY_MAX_Y    40.
-#define WORLD_BOUNDARY_MAX_Z    40.
+#define WORLD_BOUNDARY_MIN_X    -80.
+#define WORLD_BOUNDARY_MIN_Y    -80.
+#define WORLD_BOUNDARY_MIN_Z    -80.
+#define WORLD_BOUNDARY_MAX_X    80.
+#define WORLD_BOUNDARY_MAX_Y    80.
+#define WORLD_BOUNDARY_MAX_Z    80.
 #define DRONE_TAKEOFF_ALTITUDE  6.
 #define SENSOR_RANGE            1.
 #define SUCCESS_RUN             0
@@ -47,6 +47,8 @@ mavros_msgs::State          currDroneMode;
 float_t                     currConcentration;
 
 std::default_random_engine randomGenerator;
+std::thread mappingThread;
+
 
 
 static const char* NODE_NAME = "find_odor_source";
