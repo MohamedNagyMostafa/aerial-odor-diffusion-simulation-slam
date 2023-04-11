@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/nagy/test/src/concentration_mapping/cmake-build-debug/devel/setup.sh

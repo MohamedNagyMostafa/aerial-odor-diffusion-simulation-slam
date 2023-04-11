@@ -8,9 +8,15 @@ project(concentration_mapping)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  mavros
-  roscpp
+        roscpp
+        mavros_msgs
 )
+
+find_package(OpenCV 4.1 REQUIRED)
+
+
+
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -103,8 +109,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES concentration_mapping
-#  CATKIN_DEPENDS mavros roscpp
+  LIBRARIES concentration_mapping
+  CATKIN_DEPENDS mavros_msgs roscpp
 #  DEPENDS system_lib
 )
 
@@ -118,6 +124,12 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(${OpenCV_LIBRARY_DIRS})
+add_definitions(${OpenCV_DEFINITIONS})
+
+add_executable(concentration_mapping src/concentration_mapping.cpp)
+target_link_libraries(concentration_mapping ${catkin_LIBRARIES})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

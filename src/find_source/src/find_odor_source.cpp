@@ -13,7 +13,7 @@
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
-cd ..
+
 #include <random>
 #include <queue>
 #include <thread>
