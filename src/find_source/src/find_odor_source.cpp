@@ -6,11 +6,10 @@
 #include <geometry_msgs/PoseStamped.h>
 
 #include <std_msgs/Float32.h>
+#include <std_msgs/Float32MultiArray.h>
 
-#include <gazebo_msgs/ModelStates.h>
 
 #include <mavros_msgs/CommandBool.h>
-#include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
 
@@ -35,6 +34,7 @@ typedef std::vector<geometry_msgs::PoseStamped> DiscreteVector;
 ros::Subscriber dronePoseSub;
 ros::Subscriber dronePoseConcentrationSub;
 ros::Subscriber droneModeSub;
+ros::Publisher  gaussianGraphPub;
 ros::Publisher  dronePosePub;
 
 bool isConcentrationStreamFound = false;
@@ -64,6 +64,7 @@ struct Topic
     static constexpr const char* DRONE_STATE                = "/mavros/state";
     static constexpr const char* ARMING                     = "/mavros/cmd/arming";
     static constexpr const char* SET_MODE                   = "/mavros/set_mode";
+    static constexpr const char* GAUSSIAN_GRAPH             = "/gaussian_graph";
 };
 
 /**
@@ -123,6 +124,7 @@ int main(int argc, char** argv)
 
     // Publishers
     dronePosePub                = nodeHandle.advertise<geometry_msgs::PoseStamped>(Topic::SET_DRONE_POSE, 10);
+    gaussianGraphPub            = nodeHandle.advertise<geometry_msgs::PoseStamped>(Topic::GAUSSIAN_GRAPH, 10);
 
     waitForStateConnection();
 
@@ -156,6 +158,10 @@ int main(int argc, char** argv)
 
     isReachedTargetPose         = true;
 
+    std_msgs::Float32MultiArray gaussianMatrix;
+    gaussianMatrix.data.resize(WORLD_BOUNDARY_MAX_X * WORLD_BOUNDARY_MAX_Y);
+    std::fill(gaussianMatrix.data.begin(), gaussianMatrix.data.end(), 0.);
+
     while(ros::ok())
     {
         if(!isConcentrationStreamFound)
@@ -179,12 +185,13 @@ int main(int argc, char** argv)
 
                 // Send the position to the drone.
                 dronePosePub.publish(targetPose);
-
+                gaussianGraphPub.publish(gaussianMatrix);
                 ROS_FATAL_STREAM("A new target is installed");
             }
             else
             {
                 dronePosePub.publish(targetPose);
+                gaussianGraphPub.publish(gaussianMatrix);
             }
 
         }
@@ -199,7 +206,7 @@ int main(int argc, char** argv)
             moveToLocation(targetPose);
             ROS_FATAL_STREAM("found molecule stream");
 
-            OdorPriorityQueue queue;
+            OdorPriorityQueue queue(gaussianMatrix);
 
             if(isConcentrationStreamFound)
             {
@@ -217,13 +224,20 @@ int main(int argc, char** argv)
 
                     for(geometry_msgs::PoseStamped& neighborPose: droneNeighbors)
                     {
-                        moveToLocation(neighborPose);
 
+                        moveToLocation(neighborPose);
+                        ROS_INFO_STREAM("Concentration " << currConcentration);
                         queue.add(neighborPose, currConcentration);
                     }
 
                     // Pick max location
-                    ConcentrationZone maxConcentrationNeighbor   = queue.top();
+                    std::shared_ptr<ConcentrationZone> maxConcentrationNeighbor   = queue.top();
+                    maxConcentrationNeighbor->pickIncrement();
+
+                    maxConcentrationNeighbor->computeProbability();
+                    ROS_INFO_STREAM("max Concentration " << maxConcentrationNeighbor->getConcentration());
+
+                    ROS_INFO_STREAM("Probability " << maxConcentrationNeighbor->getProbability());
 //
 //                    // Check found source! (Either stay at the middle or previous with more concentration).
 //                    if(isSameLocation(maxConcentrationNeighbor.getPose(), targetPose))
@@ -246,10 +260,10 @@ int main(int argc, char** argv)
 //                        break;
 //                    }
 
-                    if(maxConcentrationNeighbor.getConcentration() == 0)
+                    if(maxConcentrationNeighbor->getConcentration() == 0)
                         break;
 
-                    jumpToNextGrid(maxConcentrationNeighbor.getPose());
+                    jumpToNextGrid(maxConcentrationNeighbor->getPose());
 
                     moveToLocation(targetPose);
 
@@ -270,13 +284,13 @@ int main(int argc, char** argv)
  */
 void jumpToNextGrid(const geometry_msgs::PoseStamped& location)
 {
-    targetPose.pose.position.x  = location.pose.position.x + 2 * (location.pose.position.x - targetPose.pose.position.x);
-    targetPose.pose.position.y  = location.pose.position.y + 2 * (location.pose.position.y - targetPose.pose.position.y);
-    targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
-
-//    targetPose.pose.position.x  = location.pose.position.x;// + 2 * (location.pose.position.x - targetPose.pose.position.x);
-//    targetPose.pose.position.y  = location.pose.position.y;// + 2 * (location.pose.position.y - targetPose.pose.position.y);
+//    targetPose.pose.position.x  = location.pose.position.x + 2 * (location.pose.position.x - targetPose.pose.position.x);
+//    targetPose.pose.position.y  = location.pose.position.y + 2 * (location.pose.position.y - targetPose.pose.position.y);
 //    targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
+
+    targetPose.pose.position.x  = location.pose.position.x + (location.pose.position.x - targetPose.pose.position.x);
+    targetPose.pose.position.y  = location.pose.position.y + (location.pose.position.y - targetPose.pose.position.y);
+    targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
 }
 
 /**
@@ -305,9 +319,9 @@ void moveToLocation(geometry_msgs::PoseStamped& location)
  */
 bool isSameLocation(const geometry_msgs::PoseStamped& location1, const geometry_msgs::PoseStamped& location2)
 {
-    return abs(location1.pose.position.x - location2.pose.position.x) <= 0.1 &&
-           abs(location1.pose.position.y - location2.pose.position.y) <= 0.1 &&
-           abs(location1.pose.position.z - location2.pose.position.z) <= 0.1;
+    return abs(location1.pose.position.x - location2.pose.position.x) <= 0.2 &&
+           abs(location1.pose.position.y - location2.pose.position.y) <= 0.2 &&
+           abs(location1.pose.position.z - location2.pose.position.z) <= 0.2;
 }
 
 /**
@@ -353,9 +367,9 @@ void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr msg)
     currPose.pose.position.z    =   msg->pose.position.z;
 
     isReachedTargetPose =   (isnan(targetPose.pose.position.x) || isnan(targetPose.pose.position.x) || isnan(targetPose.pose.position.x)) ||
-            (abs(currPose.pose.position.x - targetPose.pose.position.x) < 0.1) &&
-            (abs(currPose.pose.position.y   ==  targetPose.pose.position.y)  < 0.1) &&
-            (abs(currPose.pose.position.z   ==  targetPose.pose.position.z)  < 0.1);
+            (abs(currPose.pose.position.x - targetPose.pose.position.x) < 0.2) &&
+            (abs(currPose.pose.position.y   ==  targetPose.pose.position.y)  < 0.2) &&
+            (abs(currPose.pose.position.z   ==  targetPose.pose.position.z)  < 0.2);
 
 }
 

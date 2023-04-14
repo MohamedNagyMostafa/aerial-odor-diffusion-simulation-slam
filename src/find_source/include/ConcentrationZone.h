@@ -24,7 +24,7 @@ public:
 
     void pickIncrement(){ picked++; totalPicked++;}
 
-    void computeProbability(){ probability = picked/ totalPicked;}
+    void computeProbability(){ probability = (totalPicked > 0)?picked/ totalPicked : 0;}
 
     float getProbability() const{ return probability; }
 
@@ -51,11 +51,6 @@ public:
         return *this;
     }
 
-    bool operator<(const ConcentrationZone& obj) const
-    {
-            return concentration < obj.concentration;
-    }
-
 
 
 private:
@@ -69,4 +64,7 @@ private:
     static float    totalPicked;
 
 };
+
+float ConcentrationZone::totalPicked = 0;
+
 #endif //FIND_SOURCE_CONCENTRATIONZONE_H
