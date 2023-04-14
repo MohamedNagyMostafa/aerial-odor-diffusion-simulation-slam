@@ -233,8 +233,8 @@ int main(int argc, char** argv)
                     // Pick max location
                     std::shared_ptr<ConcentrationZone> maxConcentrationNeighbor   = queue.top();
                     maxConcentrationNeighbor->pickIncrement();
+                    queue.updateProbabilityGraph();
 
-                    maxConcentrationNeighbor->computeProbability();
                     ROS_INFO_STREAM("max Concentration " << maxConcentrationNeighbor->getConcentration());
 
                     ROS_INFO_STREAM("Probability " << maxConcentrationNeighbor->getProbability());
@@ -260,12 +260,17 @@ int main(int argc, char** argv)
 //                        break;
 //                    }
 
-                    if(maxConcentrationNeighbor->getConcentration() == 0)
+                    if(maxConcentrationNeighbor->getConcentration() == 0){
+                        // Reset.
+                        std::fill(gaussianMatrix.data.begin(), gaussianMatrix.data.end(), 0.);
                         break;
+                    }
 
                     jumpToNextGrid(maxConcentrationNeighbor->getPose());
 
                     moveToLocation(targetPose);
+                    gaussianGraphPub.publish(gaussianMatrix);
+
 
                 }
             }

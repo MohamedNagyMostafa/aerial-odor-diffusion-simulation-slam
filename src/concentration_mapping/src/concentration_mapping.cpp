@@ -50,6 +50,7 @@ const cv::Scalar HEAT_MAP_COLOR_SCHEME::COLOR_WHITE   = cv::Scalar(255, 255, 255
 float_t currConcentration;
 cv::Mat concentrationMap;
 
+
 void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr);
 void dronePoseConcentrationCallback(const std_msgs::Float32);
 void concentration2Color(cv::Scalar&);

@@ -25,7 +25,12 @@ public:
 template <typename T>
 class DynamicPriorityQueue : public std::priority_queue<std::shared_ptr<T>, std::vector<std::shared_ptr<T>>, ConcentrationComp<T>>
 {
+private:
+    std_msgs::Float32MultiArray gaussianGraph;
+
 public:
+    explicit DynamicPriorityQueue(std_msgs::Float32MultiArray& gaussianGraph): gaussianGraph(gaussianGraph){}
+
     std::shared_ptr<T> remove(const std::string & value)
     {
         std::shared_ptr<T> obj;
@@ -46,14 +51,21 @@ public:
         return obj;
     }
 
+    void updateProbability()
+    {
+        for(auto iter = this->c.begin(); iter != this->c.end(); iter++)
+        {
+            iter->get()->computeProbability();
+            gaussianGraph.data[int(iter->get()->getPose().pose.position.x),int(iter->get()->getPose().pose.position.y)] = iter->get()->getProbability();
+        }
+    }
 
 };
 
 class OdorPriorityQueue
 {
 public:
-
-    explicit OdorPriorityQueue(std_msgs::Float32MultiArray& gaussianGraph): gaussianGraph(gaussianGraph){}
+    explicit OdorPriorityQueue(std_msgs::Float32MultiArray& gaussianGraph): gaussianGraph(gaussianGraph), queue(DynamicPriorityQueue<ConcentrationZone>(gaussianGraph)){}
 
     void add(geometry_msgs::PoseStamped& pose, float& concentration)
     {
@@ -70,7 +82,6 @@ public:
             obj->setConcentration(concentration);
             queue.push(obj);
             //TODO: Check here.
-            gaussianGraph.data[int(obj->getPose().pose.position.x), int(obj->getPose().pose.position.y)] = obj->getProbability();
             return;
         }
         std::shared_ptr<ConcentrationZone> obj(new ConcentrationZone);
@@ -100,6 +111,13 @@ public:
         return queue.empty();
     }
 
+    void clear()
+    {
+        while(!queue.empty())
+            queue.pop();
+    }
+
+    void updateProbabilityGraph() { queue.updateProbability();}
 
 private:
     DynamicPriorityQueue<ConcentrationZone> queue;
