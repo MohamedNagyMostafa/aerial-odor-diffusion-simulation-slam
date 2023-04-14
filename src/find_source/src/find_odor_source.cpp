@@ -15,7 +15,7 @@
 #include <mavros_msgs/State.h>
 
 #include <random>
-#include <queue>
+#include <ConcentrationPriorityQueue.h>
 #include <thread>
 
 #define WORLD_BOUNDARY_MIN_X    -80.
@@ -72,29 +72,6 @@ struct Topic
 struct SetModeType
 {
     static constexpr const char* OFF_BOARD                  = "OFFBOARD";
-};
-
-/**
- * Data structure for neighbor locations
- */
-struct NeighborNode
-{
-    float_t concentration;
-    geometry_msgs::PoseStamped pose;
-
-    NeighborNode()  { concentration = -1;}
-    NeighborNode(float concentration, geometry_msgs::PoseStamped& pose): concentration(concentration), pose(pose){}
-};
-
-/**
- * Operator to make comparison for priority queue.
- */
-struct CompareConcentration
-{
-    bool operator()(NeighborNode const& node1, NeighborNode const& node2)
-    {
-        return node1.concentration < node2.concentration;
-    }
 };
 
 
@@ -222,11 +199,12 @@ int main(int argc, char** argv)
             moveToLocation(targetPose);
             ROS_FATAL_STREAM("found molecule stream");
 
+            OdorPriorityQueue queue;
+
             if(isConcentrationStreamFound)
             {
                 ROS_INFO("Begin searching for odor source");
                 // Perform source finding algorithm
-                NeighborNode lastNeighbor;
 
                 while(ros::ok())
                 {
@@ -236,48 +214,44 @@ int main(int argc, char** argv)
 
                     ROS_INFO_STREAM("Descritize into " << droneNeighbors.size());
 
-                    // Move to neighbors and measure concentration.
-                    std::priority_queue<NeighborNode, std::vector<NeighborNode>, CompareConcentration> neighborConcentrationQueue;
 
                     for(geometry_msgs::PoseStamped& neighborPose: droneNeighbors)
                     {
                         moveToLocation(neighborPose);
-                        NeighborNode neighborNode(currConcentration, neighborPose);
-                        neighborConcentrationQueue.push(neighborNode);
+
+                        queue.add(neighborPose, currConcentration);
                     }
 
                     // Pick max location
-                    NeighborNode maxConcentrationNeighbor   = neighborConcentrationQueue.top();
+                    ConcentrationZone maxConcentrationNeighbor   = queue.top();
+//
+//                    // Check found source! (Either stay at the middle or previous with more concentration).
+//                    if(isSameLocation(maxConcentrationNeighbor.getPose(), targetPose))
+//                    {
+//                        ROS_INFO("Drone found odor source.");\
+//                        targetPose  = (isSameLocation(maxConcentrationNeighbor.pose, targetPose))? targetPose : lastNeighbor.pose;
+//
+//                        while(ros::ok())
+//                        {
+//                            if(isReachedTargetPose && !isConcentrationStreamFound) break;
+//
+//                            targetPose.header.stamp = ros::Time::now();
+//                            targetPose.header.frame_id  = "map";
+//
+//                            dronePosePub.publish(targetPose);
+//
+//                            rate.sleep();
+//                            ros::spinOnce();
+//                        }
+//                        break;
+//                    }
 
-                    // Check found source! (Either stay at the middle or previous with more concentration).
-                    if(isSameLocation(maxConcentrationNeighbor.pose, targetPose) || (lastNeighbor.concentration != -1 && lastNeighbor.concentration > maxConcentrationNeighbor.concentration))
-                    {
-                        ROS_INFO("Drone found odor source.");\
-                        targetPose  = (isSameLocation(maxConcentrationNeighbor.pose, targetPose))? targetPose : lastNeighbor.pose;
-
-                        while(ros::ok())
-                        {
-                            if(isReachedTargetPose && !isConcentrationStreamFound) break;
-
-                            targetPose.header.stamp = ros::Time::now();
-                            targetPose.header.frame_id  = "map";
-
-                            dronePosePub.publish(targetPose);
-
-                            rate.sleep();
-                            ros::spinOnce();
-                        }
+                    if(maxConcentrationNeighbor.getConcentration() == 0)
                         break;
-                    }
 
-                    if(maxConcentrationNeighbor.concentration == 0)
-                        break;
-
-                    jumpToNextGrid(maxConcentrationNeighbor.pose);
+                    jumpToNextGrid(maxConcentrationNeighbor.getPose());
 
                     moveToLocation(targetPose);
-
-                    lastNeighbor    =   maxConcentrationNeighbor;
 
                 }
             }

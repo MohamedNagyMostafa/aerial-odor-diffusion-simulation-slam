@@ -581,7 +581,7 @@ build CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o: CXX_COMPILER__
   DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"find_source\"
   DEP_FILE = CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
+  INCLUDES = -I/home/nagy/test/src/find_source/include -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
   OBJECT_DIR = CMakeFiles/find_odor_source.dir
   OBJECT_FILE_DIR = CMakeFiles/find_odor_source.dir/src
 

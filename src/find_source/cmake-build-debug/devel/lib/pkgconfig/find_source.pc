@@ -3,6 +3,6 @@ prefix=/home/nagy/test/src/find_source/cmake-build-debug/devel
 Name: find_source
 Description: Description of find_source
 Version: 0.0.0
-Cflags: 
+Cflags: -I/home/nagy/test/src/find_source/include
 Libs: -L${prefix}/lib -lfind_source
 Requires: gazebo_ros mavros_msgs roscpp
