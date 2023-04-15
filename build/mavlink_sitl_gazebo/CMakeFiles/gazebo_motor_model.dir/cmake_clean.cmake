@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "/home/nagy/test/devel/.private/mavlink_sitl_gazebo/lib/libgazebo_motor_model.pdb"
   "/home/nagy/test/devel/.private/mavlink_sitl_gazebo/lib/libgazebo_motor_model.so"
   "CMakeFiles/gazebo_motor_model.dir/src/gazebo_motor_model.cpp.o"
+  "CMakeFiles/gazebo_motor_model.dir/src/gazebo_motor_model.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

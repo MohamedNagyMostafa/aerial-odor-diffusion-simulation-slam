@@ -1,6 +1,5 @@
 find_source
 /home/nagy/test/devel/.private/find_source/cmake.lock /home/nagy/test/devel/./cmake.lock
-/home/nagy/test/devel/.private/find_source/lib/libfind_odor_source.so /home/nagy/test/devel/lib/libfind_odor_source.so
 /home/nagy/test/devel/.private/find_source/lib/pkgconfig/find_source.pc /home/nagy/test/devel/lib/pkgconfig/find_source.pc
 /home/nagy/test/devel/.private/find_source/lib/find_source/find_odor_source /home/nagy/test/devel/lib/find_source/find_odor_source
 /home/nagy/test/devel/.private/find_source/share/find_source/cmake/find_sourceConfig.cmake /home/nagy/test/devel/share/find_source/cmake/find_sourceConfig.cmake

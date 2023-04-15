@@ -1,8 +1,0 @@
-In file included from [01m[K/home/nagy/test/src/particle_shooter/src/particle_shooter_plugin.cpp:2[m[K:
-[01m[K/home/nagy/test/src/particle_shooter/include/particle_shooter_plugin.h:29:10:[m[K [01;31m[Kfatal error: [m[KParticle.h: No such file or directory
-   29 | #include [01;31m[K<Particle.h>[m[K
-      |          [01;31m[K^~~~~~~~~~~~[m[K
-compilation terminated.
-make[2]: *** [CMakeFiles/particle_shooter_plugin.dir/build.make:63: CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o] Error 1
-make[1]: *** [CMakeFiles/Makefile2:207: CMakeFiles/particle_shooter_plugin.dir/all] Error 2
-make: *** [Makefile:141: all] Error 2

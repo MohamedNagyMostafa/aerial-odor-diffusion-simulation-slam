@@ -6,7 +6,6 @@
 #include <geometry_msgs/PoseStamped.h>
 
 #include <std_msgs/Float32.h>
-#include <std_msgs/Float32MultiArray.h>
 
 
 #include <mavros_msgs/CommandBool.h>
@@ -17,24 +16,17 @@
 #include <ConcentrationPriorityQueue.h>
 #include <thread>
 
-#define WORLD_BOUNDARY_MIN_X    -80.
-#define WORLD_BOUNDARY_MIN_Y    -80.
-#define WORLD_BOUNDARY_MIN_Z    -80.
-#define WORLD_BOUNDARY_MAX_X    80.
-#define WORLD_BOUNDARY_MAX_Y    80.
-#define WORLD_BOUNDARY_MAX_Z    80.
-#define DRONE_TAKEOFF_ALTITUDE  6.
-#define SENSOR_RANGE            1.
-#define SUCCESS_RUN             0
-#define FAILED_RUN              -1
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
+#include <pcl/visualization/pcl_visualizer.h>
 
+#include <Utils.h>
 
 typedef std::vector<geometry_msgs::PoseStamped> DiscreteVector;
 
 ros::Subscriber dronePoseSub;
 ros::Subscriber dronePoseConcentrationSub;
 ros::Subscriber droneModeSub;
-ros::Publisher  gaussianGraphPub;
 ros::Publisher  dronePosePub;
 
 bool isConcentrationStreamFound = false;
@@ -64,7 +56,6 @@ struct Topic
     static constexpr const char* DRONE_STATE                = "/mavros/state";
     static constexpr const char* ARMING                     = "/mavros/cmd/arming";
     static constexpr const char* SET_MODE                   = "/mavros/set_mode";
-    static constexpr const char* GAUSSIAN_GRAPH             = "/gaussian_graph";
 };
 
 /**
@@ -74,6 +65,7 @@ struct SetModeType
 {
     static constexpr const char* OFF_BOARD                  = "OFFBOARD";
 };
+
 
 
 void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr);
@@ -105,12 +97,24 @@ void moveToLocation(geometry_msgs::PoseStamped&);
 
 void jumpToNextGrid(const geometry_msgs::PoseStamped&);
 
+void graphInitialization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph);
+
+void pclViewerResetAndDraw(pcl::visualization::PCLVisualizer::Ptr& viewer, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph);
+
+
+void pcl_viewer_thread(pcl::visualization::PCLVisualizer::Ptr viewer) {
+    while (!viewer->wasStopped()) {
+        viewer->spinOnce(100);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+}
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, NODE_NAME);
     ros::NodeHandle nodeHandle;
 
-    ros::Rate rate(10);
+    ros::Rate rate(20);
 
     /// Create subscribers & publishers.
     // Subscribers
@@ -124,7 +128,6 @@ int main(int argc, char** argv)
 
     // Publishers
     dronePosePub                = nodeHandle.advertise<geometry_msgs::PoseStamped>(Topic::SET_DRONE_POSE, 10);
-    gaussianGraphPub            = nodeHandle.advertise<geometry_msgs::PoseStamped>(Topic::GAUSSIAN_GRAPH, 10);
 
     waitForStateConnection();
 
@@ -158,9 +161,18 @@ int main(int argc, char** argv)
 
     isReachedTargetPose         = true;
 
-    std_msgs::Float32MultiArray gaussianMatrix;
-    gaussianMatrix.data.resize(WORLD_BOUNDARY_MAX_X * WORLD_BOUNDARY_MAX_Y);
-    std::fill(gaussianMatrix.data.begin(), gaussianMatrix.data.end(), 0.);
+    // Initialize visualization ..
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr gaussianGridProbabilityDensity( new pcl::PointCloud<pcl::PointXYZRGB>);
+
+    graphInitialization(gaussianGridProbabilityDensity);
+
+    pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Concentration Probability Density"));
+    viewer->addPointCloud<pcl::PointXYZRGB>(gaussianGridProbabilityDensity, "grid");
+    viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 10., "grid");
+    viewer->addCoordinateSystem(0.5);
+    viewer->initCameraParameters();
+
+    std::thread viewer_thread(pcl_viewer_thread, viewer);
 
     while(ros::ok())
     {
@@ -185,14 +197,13 @@ int main(int argc, char** argv)
 
                 // Send the position to the drone.
                 dronePosePub.publish(targetPose);
-                gaussianGraphPub.publish(gaussianMatrix);
                 ROS_FATAL_STREAM("A new target is installed");
             }
             else
             {
                 dronePosePub.publish(targetPose);
-                gaussianGraphPub.publish(gaussianMatrix);
             }
+
 
         }
         else
@@ -206,7 +217,7 @@ int main(int argc, char** argv)
             moveToLocation(targetPose);
             ROS_FATAL_STREAM("found molecule stream");
 
-            OdorPriorityQueue queue(gaussianMatrix);
+            OdorPriorityQueue queue(gaussianGridProbabilityDensity);
 
             if(isConcentrationStreamFound)
             {
@@ -215,6 +226,7 @@ int main(int argc, char** argv)
 
                 while(ros::ok())
                 {
+                    viewer->spinOnce();
                     // Discretization.
                     DiscreteVector droneNeighbors;
                     neighborsDiscretization(droneNeighbors);
@@ -235,42 +247,24 @@ int main(int argc, char** argv)
                     maxConcentrationNeighbor->pickIncrement();
                     queue.updateProbabilityGraph();
 
+                    pclViewerResetAndDraw(viewer, gaussianGridProbabilityDensity);
+
                     ROS_INFO_STREAM("max Concentration " << maxConcentrationNeighbor->getConcentration());
 
                     ROS_INFO_STREAM("Probability " << maxConcentrationNeighbor->getProbability());
-//
-//                    // Check found source! (Either stay at the middle or previous with more concentration).
-//                    if(isSameLocation(maxConcentrationNeighbor.getPose(), targetPose))
-//                    {
-//                        ROS_INFO("Drone found odor source.");\
-//                        targetPose  = (isSameLocation(maxConcentrationNeighbor.pose, targetPose))? targetPose : lastNeighbor.pose;
-//
-//                        while(ros::ok())
-//                        {
-//                            if(isReachedTargetPose && !isConcentrationStreamFound) break;
-//
-//                            targetPose.header.stamp = ros::Time::now();
-//                            targetPose.header.frame_id  = "map";
-//
-//                            dronePosePub.publish(targetPose);
-//
-//                            rate.sleep();
-//                            ros::spinOnce();
-//                        }
-//                        break;
-//                    }
+
+
 
                     if(maxConcentrationNeighbor->getConcentration() == 0){
                         // Reset.
-                        std::fill(gaussianMatrix.data.begin(), gaussianMatrix.data.end(), 0.);
+                        queue.clear();
+                        pclViewerResetAndDraw(viewer, gaussianGridProbabilityDensity);
                         break;
                     }
 
                     jumpToNextGrid(maxConcentrationNeighbor->getPose());
 
                     moveToLocation(targetPose);
-                    gaussianGraphPub.publish(gaussianMatrix);
-
 
                 }
             }
@@ -279,10 +273,44 @@ int main(int argc, char** argv)
         rate.sleep();
         ros::spinOnce();
     }
-
+    viewer_thread.join();
     return SUCCESS_RUN;
 }
 
+void graphInitialization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph)
+{
+
+    graph->width   = 2 *    WORLD_BOUNDARY_MAX_X;
+    graph->height  = 2 *    WORLD_BOUNDARY_MAX_Y;
+    graph->points.resize(
+            graph->width * graph->height
+    );
+
+    for(int32_t x = 0; x < graph->width; x++)
+    {
+        for(int32_t y = 0; y < graph->height; y++)
+        {
+            int32_t idx  = y + x * graph->height;
+
+            pcl::PointXYZRGB& point     = graph->points[idx];
+            point.x =   x;
+            point.y =   y;
+            point.z = 0.f;
+
+            Utils::setProbabilityColor(point.z, point);
+        }
+    }
+}
+
+
+void pclViewerResetAndDraw(pcl::visualization::PCLVisualizer::Ptr& viewer, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph)
+{
+    viewer->removeAllPointClouds();
+    viewer->removeAllShapes();
+
+    viewer->addPointCloud<pcl::PointXYZRGB> (graph, "grid");
+    viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 10., "grid");
+}
 /**
  * Move to the middle of the next discretized grid given gradient result.
  * @param location
@@ -311,7 +339,7 @@ void moveToLocation(geometry_msgs::PoseStamped& location)
     while(ros::ok() && !isDroneInLocation(location))
     {
         dronePosePub.publish(location);
-        ros::Rate(10).sleep();
+        ros::Rate(20).sleep();
         ros::spinOnce();
     }
 }
@@ -458,3 +486,4 @@ void neighborsDiscretization(DiscreteVector& discreteVector)
         }
     }
 }
+

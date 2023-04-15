@@ -7,8 +7,13 @@
 #include <queue>
 #include <unordered_map>
 #include <std_msgs/Float32MultiArray.h>
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
+#include <pcl/io/ply_io.h>
 
 #include "ConcentrationZone.h"
+#include "Utils.h"
+
 
 template <typename T>
 
@@ -26,10 +31,10 @@ template <typename T>
 class DynamicPriorityQueue : public std::priority_queue<std::shared_ptr<T>, std::vector<std::shared_ptr<T>>, ConcentrationComp<T>>
 {
 private:
-    std_msgs::Float32MultiArray gaussianGraph;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr gaussianGraph;
 
 public:
-    explicit DynamicPriorityQueue(std_msgs::Float32MultiArray& gaussianGraph): gaussianGraph(gaussianGraph){}
+    explicit DynamicPriorityQueue(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& gaussianGraph): gaussianGraph(gaussianGraph){}
 
     std::shared_ptr<T> remove(const std::string & value)
     {
@@ -56,7 +61,11 @@ public:
         for(auto iter = this->c.begin(); iter != this->c.end(); iter++)
         {
             iter->get()->computeProbability();
-            gaussianGraph.data[int(iter->get()->getPose().pose.position.x),int(iter->get()->getPose().pose.position.y)] = iter->get()->getProbability();
+            pcl::PointXYZRGB& point = gaussianGraph->at(int(iter->get()->getPose().pose.position.x + WORLD_BOUNDARY_MAX_X),
+                              int(iter->get()->getPose().pose.position.y + WORLD_BOUNDARY_MAX_Y));
+            point.z = iter->get()->getProbability();
+
+            Utils::setProbabilityColor(point.z, point);
         }
     }
 
@@ -65,7 +74,7 @@ public:
 class OdorPriorityQueue
 {
 public:
-    explicit OdorPriorityQueue(std_msgs::Float32MultiArray& gaussianGraph): gaussianGraph(gaussianGraph), queue(DynamicPriorityQueue<ConcentrationZone>(gaussianGraph)){}
+    explicit OdorPriorityQueue(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& gaussianGraph): gaussianGraph(gaussianGraph), queue(DynamicPriorityQueue<ConcentrationZone>(gaussianGraph)){}
 
     void add(geometry_msgs::PoseStamped& pose, float& concentration)
     {
@@ -113,8 +122,20 @@ public:
 
     void clear()
     {
+
         while(!queue.empty())
+        {
+            auto obj = queue.top();
+
+            pcl::PointXYZRGB& point = gaussianGraph->at(int(obj->getPose().pose.position.x + WORLD_BOUNDARY_MAX_X),
+                                                        int(obj->getPose().pose.position.y + WORLD_BOUNDARY_MAX_Y));
+            point.z = 0.f;
+
+            Utils::setProbabilityColor(point.z, point);
+
             queue.pop();
+        }
+
     }
 
     void updateProbabilityGraph() { queue.updateProbability();}
@@ -122,7 +143,7 @@ public:
 private:
     DynamicPriorityQueue<ConcentrationZone> queue;
     std::unordered_map<std::string , ConcentrationZone> map;
-    std_msgs::Float32MultiArray gaussianGraph;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr gaussianGraph;
 
     static void generateZoneToken(geometry_msgs::PoseStamped& pose, std::string& token)
     {

@@ -1,27 +1,28 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp
+Change Dir: /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-J9Lalh
 
-Run Build Command(s):/usr/bin/make cmTC_e266f/fast && /usr/bin/make -f CMakeFiles/cmTC_e266f.dir/build.make CMakeFiles/cmTC_e266f.dir/build
-make[1]: Entering directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_e266f.dir/src.c.o
-/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_e266f.dir/src.c.o   -c /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_e266f
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e266f.dir/link.txt --verbose=1
-/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    -rdynamic CMakeFiles/cmTC_e266f.dir/src.c.o  -o cmTC_e266f 
-/usr/bin/ld: CMakeFiles/cmTC_e266f.dir/src.c.o: in function `main':
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_f406f/fast && /usr/bin/make  -f CMakeFiles/cmTC_f406f.dir/build.make CMakeFiles/cmTC_f406f.dir/build
+make[1]: Entering directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-J9Lalh'
+Building C object CMakeFiles/cmTC_f406f.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_f406f.dir/src.c.o -c /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-J9Lalh/src.c
+Linking C executable cmTC_f406f
+/home/nagy/.local/lib/python3.8/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f406f.dir/link.txt --verbose=1
+/usr/bin/cc -rdynamic CMakeFiles/cmTC_f406f.dir/src.c.o -o cmTC_f406f 
+/usr/bin/ld: CMakeFiles/cmTC_f406f.dir/src.c.o: in function `main':
 src.c:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
-/usr/bin/ld: src.c:(.text+0x63): undefined reference to `pthread_join'
+/usr/bin/ld: src.c:(.text+0x5e): undefined reference to `pthread_cancel'
+/usr/bin/ld: src.c:(.text+0x6f): undefined reference to `pthread_join'
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_e266f.dir/build.make:87: cmTC_e266f] Error 1
-make[1]: Leaving directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_e266f/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_f406f.dir/build.make:99: cmTC_f406f] Error 1
+make[1]: Leaving directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-J9Lalh'
+make: *** [Makefile:127: cmTC_f406f/fast] Error 2
 
 
 Source file was:
 #include <pthread.h>
 
-void* test_func(void* data)
+static void* test_func(void* data)
 {
   return data;
 }
@@ -31,6 +32,7 @@ int main(void)
   pthread_t thread;
   pthread_create(&thread, NULL, test_func, NULL);
   pthread_detach(thread);
+  pthread_cancel(thread);
   pthread_join(thread, NULL);
   pthread_atfork(NULL, NULL, NULL);
   pthread_exit(NULL);
@@ -38,21 +40,22 @@ int main(void)
   return 0;
 }
 
-Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_68edd/fast && /usr/bin/make -f CMakeFiles/cmTC_68edd.dir/build.make CMakeFiles/cmTC_68edd.dir/build
-make[1]: Entering directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_68edd.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_68edd.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
-Linking C executable cmTC_68edd
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_68edd.dir/link.txt --verbose=1
-/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_68edd.dir/CheckFunctionExists.c.o  -o cmTC_68edd  -lpthreads 
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-m2YUxk
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_f6896/fast && /usr/bin/make  -f CMakeFiles/cmTC_f6896.dir/build.make CMakeFiles/cmTC_f6896.dir/build
+make[1]: Entering directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-m2YUxk'
+Building C object CMakeFiles/cmTC_f6896.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_f6896.dir/CheckFunctionExists.c.o -c /home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-m2YUxk/CheckFunctionExists.c
+Linking C executable cmTC_f6896
+/home/nagy/.local/lib/python3.8/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f6896.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create -rdynamic CMakeFiles/cmTC_f6896.dir/CheckFunctionExists.c.o -o cmTC_f6896  -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_68edd.dir/build.make:87: cmTC_68edd] Error 1
-make[1]: Leaving directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_68edd/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_f6896.dir/build.make:99: cmTC_f6896] Error 1
+make[1]: Leaving directory '/home/nagy/test/build/concentration_slam/CMakeFiles/CMakeScratch/TryCompile-m2YUxk'
+make: *** [Makefile:127: cmTC_f6896/fast] Error 2
 
 
 

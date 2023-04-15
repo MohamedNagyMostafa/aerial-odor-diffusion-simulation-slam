@@ -1,5 +1,0 @@
-[31m[1mCMake Error[0m at /home/nagy/test/src/concentration_slam/CMakeLists.txt:130 (target_link_libraries):
-  Cannot specify link libraries for target "drone_conentration" which is not
-  built by this project.
-
-

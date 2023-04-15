@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "/home/nagy/test/devel/.private/mavlink_sitl_gazebo/lib/libgazebo_pose_sniffer_plugin.pdb"
   "/home/nagy/test/devel/.private/mavlink_sitl_gazebo/lib/libgazebo_pose_sniffer_plugin.so"
   "CMakeFiles/gazebo_pose_sniffer_plugin.dir/src/gazebo_pose_sniffer_plugin.cpp.o"
+  "CMakeFiles/gazebo_pose_sniffer_plugin.dir/src/gazebo_pose_sniffer_plugin.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

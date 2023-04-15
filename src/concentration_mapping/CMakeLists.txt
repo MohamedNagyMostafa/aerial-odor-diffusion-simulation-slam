@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
         roscpp
         mavros_msgs
 )
-find_package(PCL 1.10 REQUIRED COMPONENTS common visualization)
+
 find_package(OpenCV 4.1 REQUIRED)
 
 
@@ -124,18 +124,12 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
-
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${OpenCV_LIBRARY_DIRS})
 add_definitions(${OpenCV_DEFINITIONS})
 
-include_directories(${PCL_INCLUDE_DIRS})
-link_directories(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
-
-
 add_executable(concentration_mapping src/concentration_mapping.cpp)
-target_link_libraries(concentration_mapping ${catkin_LIBRARIES} ${OpenCV_LIBS}  ${PCL_COMMON_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES})
+target_link_libraries(concentration_mapping ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

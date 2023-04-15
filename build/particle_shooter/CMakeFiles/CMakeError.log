@@ -1,27 +1,28 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp
+Change Dir: /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-d8JhOs
 
-Run Build Command(s):/usr/bin/make cmTC_2db4a/fast && /usr/bin/make -f CMakeFiles/cmTC_2db4a.dir/build.make CMakeFiles/cmTC_2db4a.dir/build
-make[1]: Entering directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_2db4a.dir/src.c.o
-/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_2db4a.dir/src.c.o   -c /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_2db4a
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2db4a.dir/link.txt --verbose=1
-/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    -rdynamic CMakeFiles/cmTC_2db4a.dir/src.c.o  -o cmTC_2db4a 
-/usr/bin/ld: CMakeFiles/cmTC_2db4a.dir/src.c.o: in function `main':
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_7f9ac/fast && /usr/bin/make  -f CMakeFiles/cmTC_7f9ac.dir/build.make CMakeFiles/cmTC_7f9ac.dir/build
+make[1]: Entering directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-d8JhOs'
+Building C object CMakeFiles/cmTC_7f9ac.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_7f9ac.dir/src.c.o -c /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-d8JhOs/src.c
+Linking C executable cmTC_7f9ac
+/home/nagy/.local/lib/python3.8/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7f9ac.dir/link.txt --verbose=1
+/usr/bin/cc -rdynamic CMakeFiles/cmTC_7f9ac.dir/src.c.o -o cmTC_7f9ac 
+/usr/bin/ld: CMakeFiles/cmTC_7f9ac.dir/src.c.o: in function `main':
 src.c:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
-/usr/bin/ld: src.c:(.text+0x63): undefined reference to `pthread_join'
+/usr/bin/ld: src.c:(.text+0x5e): undefined reference to `pthread_cancel'
+/usr/bin/ld: src.c:(.text+0x6f): undefined reference to `pthread_join'
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_2db4a.dir/build.make:87: cmTC_2db4a] Error 1
-make[1]: Leaving directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_2db4a/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_7f9ac.dir/build.make:99: cmTC_7f9ac] Error 1
+make[1]: Leaving directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-d8JhOs'
+make: *** [Makefile:127: cmTC_7f9ac/fast] Error 2
 
 
 Source file was:
 #include <pthread.h>
 
-void* test_func(void* data)
+static void* test_func(void* data)
 {
   return data;
 }
@@ -31,6 +32,7 @@ int main(void)
   pthread_t thread;
   pthread_create(&thread, NULL, test_func, NULL);
   pthread_detach(thread);
+  pthread_cancel(thread);
   pthread_join(thread, NULL);
   pthread_atfork(NULL, NULL, NULL);
   pthread_exit(NULL);
@@ -38,21 +40,22 @@ int main(void)
   return 0;
 }
 
-Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_d5999/fast && /usr/bin/make -f CMakeFiles/cmTC_d5999.dir/build.make CMakeFiles/cmTC_d5999.dir/build
-make[1]: Entering directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_d5999.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_d5999.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
-Linking C executable cmTC_d5999
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d5999.dir/link.txt --verbose=1
-/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_d5999.dir/CheckFunctionExists.c.o  -o cmTC_d5999  -lpthreads 
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-Gy3uKq
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_39490/fast && /usr/bin/make  -f CMakeFiles/cmTC_39490.dir/build.make CMakeFiles/cmTC_39490.dir/build
+make[1]: Entering directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-Gy3uKq'
+Building C object CMakeFiles/cmTC_39490.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_39490.dir/CheckFunctionExists.c.o -c /home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-Gy3uKq/CheckFunctionExists.c
+Linking C executable cmTC_39490
+/home/nagy/.local/lib/python3.8/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_39490.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create -rdynamic CMakeFiles/cmTC_39490.dir/CheckFunctionExists.c.o -o cmTC_39490  -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_d5999.dir/build.make:87: cmTC_d5999] Error 1
-make[1]: Leaving directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_d5999/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_39490.dir/build.make:99: cmTC_39490] Error 1
+make[1]: Leaving directory '/home/nagy/test/build/particle_shooter/CMakeFiles/CMakeScratch/TryCompile-Gy3uKq'
+make: *** [Makefile:127: cmTC_39490/fast] Error 2
 
 
 

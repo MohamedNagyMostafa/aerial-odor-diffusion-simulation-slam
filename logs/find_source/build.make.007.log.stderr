@@ -1,7 +1,0 @@
-/usr/bin/ld: CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o: in function `main':
-find_odor_source.cpp:(.text+0x497): undefined reference to `randomPose(double, double, double)'
-/usr/bin/ld: find_odor_source.cpp:(.text+0x4c0): undefined reference to `randomPose(double, double, double)'
-collect2: error: ld returned 1 exit status
-make[2]: *** [CMakeFiles/find_odor_source.dir/build.make:128: /home/nagy/test/devel/.private/find_source/lib/find_source/find_odor_source] Error 1
-make[1]: *** [CMakeFiles/Makefile2:2509: CMakeFiles/find_odor_source.dir/all] Error 2
-make: *** [Makefile:146: all] Error 2
