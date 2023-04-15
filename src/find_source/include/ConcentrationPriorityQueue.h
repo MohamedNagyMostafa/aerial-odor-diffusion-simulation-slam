@@ -14,6 +14,7 @@
 #include "ConcentrationZone.h"
 #include "Utils.h"
 
+__attribute__((unused)) std::mutex point_cloud_queue_mutex;
 
 template <typename T>
 
@@ -58,14 +59,26 @@ public:
 
     void updateProbability()
     {
+
+
         for(auto iter = this->c.begin(); iter != this->c.end(); iter++)
         {
             iter->get()->computeProbability();
-            pcl::PointXYZRGB& point = gaussianGraph->at(int(iter->get()->getPose().pose.position.x + WORLD_BOUNDARY_MAX_X),
-                              int(iter->get()->getPose().pose.position.y + WORLD_BOUNDARY_MAX_Y));
-            point.z = iter->get()->getProbability();
 
-            Utils::setProbabilityColor(point.z, point);
+            for(int i =-1; i < 2; i++)
+            {
+                for(int j =-1; j < 2; j++)
+                {
+                    std::lock_guard<std::mutex> lock(point_cloud_queue_mutex);
+
+                    pcl::PointXYZRGB& point = gaussianGraph->at(int(iter->get()->getPose().pose.position.x + WORLD_BOUNDARY_MAX_X) + i,
+                                                                 int(iter->get()->getPose().pose.position.y + WORLD_BOUNDARY_MAX_Y) + j);
+                    point.z = iter->get()->getProbability() * 20;
+
+                    Utils::setProbabilityColor(iter->get()->getProbability() , point);
+
+                }
+            }
         }
     }
 

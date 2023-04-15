@@ -102,10 +102,13 @@ void graphInitialization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph);
 void pclViewerResetAndDraw(pcl::visualization::PCLVisualizer::Ptr& viewer, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph);
 
 
-void pcl_viewer_thread(pcl::visualization::PCLVisualizer::Ptr viewer) {
+void pcl_viewer_thread(pcl::visualization::PCLVisualizer::Ptr viewer, pcl::PointCloud<pcl::PointXYZRGB>::Ptr gaussianGridProbabilityDensity ) {
     while (!viewer->wasStopped()) {
-        viewer->spinOnce(100);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        pclViewerResetAndDraw(viewer, gaussianGridProbabilityDensity);
+
+        viewer->spinOnce(20);
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 }
 
@@ -172,7 +175,7 @@ int main(int argc, char** argv)
     viewer->addCoordinateSystem(0.5);
     viewer->initCameraParameters();
 
-    std::thread viewer_thread(pcl_viewer_thread, viewer);
+    std::thread viewer_thread(pcl_viewer_thread, viewer, gaussianGridProbabilityDensity);
 
     while(ros::ok())
     {
@@ -226,7 +229,6 @@ int main(int argc, char** argv)
 
                 while(ros::ok())
                 {
-                    viewer->spinOnce();
                     // Discretization.
                     DiscreteVector droneNeighbors;
                     neighborsDiscretization(droneNeighbors);
@@ -247,8 +249,6 @@ int main(int argc, char** argv)
                     maxConcentrationNeighbor->pickIncrement();
                     queue.updateProbabilityGraph();
 
-                    pclViewerResetAndDraw(viewer, gaussianGridProbabilityDensity);
-
                     ROS_INFO_STREAM("max Concentration " << maxConcentrationNeighbor->getConcentration());
 
                     ROS_INFO_STREAM("Probability " << maxConcentrationNeighbor->getProbability());
@@ -258,7 +258,7 @@ int main(int argc, char** argv)
                     if(maxConcentrationNeighbor->getConcentration() == 0){
                         // Reset.
                         queue.clear();
-                        pclViewerResetAndDraw(viewer, gaussianGridProbabilityDensity);
+
                         break;
                     }
 
@@ -290,7 +290,7 @@ void graphInitialization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph)
     {
         for(int32_t y = 0; y < graph->height; y++)
         {
-            int32_t idx  = y + x * graph->height;
+            int32_t idx  = x + y * graph->height;
 
             pcl::PointXYZRGB& point     = graph->points[idx];
             point.x =   x;
@@ -305,6 +305,8 @@ void graphInitialization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph)
 
 void pclViewerResetAndDraw(pcl::visualization::PCLVisualizer::Ptr& viewer, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& graph)
 {
+    std::lock_guard<std::mutex> lock(point_cloud_queue_mutex);
+
     viewer->removeAllPointClouds();
     viewer->removeAllShapes();
 

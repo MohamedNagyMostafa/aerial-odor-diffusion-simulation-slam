@@ -38,13 +38,10 @@ private:
 
 
 public:
-    static void setProbabilityColor(float& probability, pcl::PointXYZRGB& point)
+    static void setProbabilityColor(float probability, pcl::PointXYZRGB& point)
     {
         cv::Scalar_<std::uint8_t> color;
-        if(probability == 1)
-        {
-            ROS_INFO_STREAM("Found pro 1 at "<<point.x <<" " << point.y);
-        }
+
 
         if(probability <= 0)
         {
@@ -78,6 +75,7 @@ public:
         point.g = color.val[1];
         point.b = color.val[2];
     }
+
 };
 
 const cv::Scalar_<std::uint8_t> Utils::HEAT_MAP_COLOR_SCHEME::COLOR_RED    = cv::Scalar(255, 0, 0);

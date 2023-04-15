@@ -1,0 +1,8 @@
+/usr/bin/ld: CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o: in function `pclViewerResetAndDraw(boost::shared_ptr<pcl::visualization::PCLVisualizer>&, boost::shared_ptr<pcl::PointCloud<pcl::PointXYZRGB> >&)':
+find_odor_source.cpp:(.text+0x25d6): undefined reference to `Utils::point_cloud_queue_mutex'
+/usr/bin/ld: CMakeFiles/find_odor_source.dir/src/find_odor_source.cpp.o: in function `DynamicPriorityQueue<ConcentrationZone>::updateProbability()':
+find_odor_source.cpp:(.text._ZN20DynamicPriorityQueueI17ConcentrationZoneE17updateProbabilityEv[_ZN20DynamicPriorityQueueI17ConcentrationZoneE17updateProbabilityEv]+0xcc): undefined reference to `Utils::point_cloud_queue_mutex'
+collect2: error: ld returned 1 exit status
+make[2]: *** [CMakeFiles/find_odor_source.dir/build.make:244: /home/nagy/test/devel/.private/find_source/lib/find_source/find_odor_source] Error 1
+make[1]: *** [CMakeFiles/Makefile2:2509: CMakeFiles/find_odor_source.dir/all] Error 2
+make: *** [Makefile:146: all] Error 2
