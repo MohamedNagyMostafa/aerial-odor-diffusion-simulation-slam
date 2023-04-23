@@ -76,6 +76,11 @@ public:
         point.b = color.val[2];
     }
 
+    static float_t round(float_t value)
+    {
+        return std::ceil(value * 10000.0) / 10000.0;
+    }
+
 };
 
 const cv::Scalar_<std::uint8_t> Utils::HEAT_MAP_COLOR_SCHEME::COLOR_RED    = cv::Scalar(255, 0, 0);

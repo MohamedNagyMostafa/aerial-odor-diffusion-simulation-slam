@@ -37,7 +37,7 @@ void gazebo::ParticleShooterPlugin::connectParticleGeneratorUpdateBegin()
     this->_particleGeneratorEvent = event::Events::ConnectWorldUpdateBegin(std::bind(&ParticleShooterPlugin::OnUpdate_particleGenerator, this));
 }
 
-void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string modelName)
+void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string modelName, float_t currentTime)
 {
     sdf::SDFPtr particleSDF = sdf::readFile(PARTICLE_SPHERE_MODEL_SDF_PATH);
 
@@ -59,6 +59,11 @@ void gazebo::ParticleShooterPlugin::generateModelByName_Add2World(std::string mo
                 ->GetElement(Elements::MODEL)
                 ->FindElement(Elements::POSE)
                 ->Set(particlePose);
+
+    particleSDF->Root()
+            ->GetElement(Elements::MODEL)
+            ->FindElement(Elements::INIT_TIME)
+            ->Set(currentTime);
 
     this->_world->InsertModelSDF(*particleSDF);
 }
@@ -165,8 +170,8 @@ void gazebo::ParticleShooterPlugin::OnUpdate_particleGenerator()
                 std::string particleModelName = PARTICLE_MODEL_NAME + std::to_string(_particleIdx + i);
 
                 generatorThreads.push_back(
-                        std::thread( [this, particleModelName] {
-                            generateModelByName_Add2World(particleModelName);
+                        std::thread( [this, particleModelName, currentTime] {
+                            generateModelByName_Add2World(particleModelName, currentTime);
                         })
                 );
             }
@@ -257,6 +262,9 @@ void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelP
 {
     // Euclidean distance between the particle and the emitter.
     ignition::math::Pose3 currParticlePose  = particle->WorldPose();
+    float_t initTime    = particle->GetSDF()->FindElement(Elements::INIT_TIME)->Get<float_t>();
+    float_t duration    = t - initTime;
+
 
     double_t r  = sqrt(
             pow(_sourcePose.X() - currParticlePose.X(), 2) +
@@ -264,7 +272,7 @@ void gazebo::ParticleShooterPlugin::computeParticleConcentration(physics::ModelP
             pow(_sourcePose.Z() - currParticlePose.Z(), 2));
 
     // Compute the particle concentration.
-    double_t concentration = pow(_sourceStrength/(4 * M_PI * _diffusionCoefficient * t), 3./2.) * exp(-pow(r,2)/(4 * _diffusionCoefficient * t));
+    double_t concentration = pow(_sourceStrength/(4 * M_PI * _diffusionCoefficient * duration), 3./2.) * exp(-pow(r,2)/(4 * _diffusionCoefficient * duration));
 
     // Update the concentration in the sdf file.
     concentrationElement      = particle->GetSDF()->FindElement(Elements::CONCENTRATION);

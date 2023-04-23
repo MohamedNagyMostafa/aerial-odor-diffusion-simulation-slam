@@ -15,7 +15,7 @@
 #define WORLD_BOUNDARY_MAX_X        80.
 #define WORLD_BOUNDARY_MAX_Y        80.
 #define MIN_CONCENTRATION           0.00000001
-#define MAX_CONCENTRATION           0.03
+#define MAX_CONCENTRATION           1.
 #define OFFSET                      10.
 #define MAP_WINDOW_SIZE            800
 
@@ -49,6 +49,7 @@ const cv::Scalar HEAT_MAP_COLOR_SCHEME::COLOR_WHITE   = cv::Scalar(255, 255, 255
 
 float_t currConcentration;
 cv::Mat concentrationMap;
+std::int32_t radarRadius;
 
 
 void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr);
@@ -59,6 +60,7 @@ void concentration2Color(cv::Scalar&);
 int main(int argc, char** argv)
 {
     currConcentration   = 0.;
+    radarRadius         = 0.;
     concentrationMap    = cv::Mat(cv::Size(2*(WORLD_BOUNDARY_MAX_X + OFFSET),
                                            2*(WORLD_BOUNDARY_MAX_Y + OFFSET)),
                                   CV_8UC3, HEAT_MAP_COLOR_SCHEME::COLOR_WHITE);
@@ -137,10 +139,19 @@ void dronePoseCallback(const geometry_msgs::PoseStamped::ConstPtr msg)
     concentrationMap.at<cv::Vec3b>(cv::Point(x, y+1)) = cv::Vec3b (concentrationColor[0], concentrationColor[1], concentrationColor[2]);
     concentrationMap.at<cv::Vec3b>(cv::Point(x+1, y)) = cv::Vec3b (concentrationColor[0], concentrationColor[1], concentrationColor[2]);
     concentrationMap.at<cv::Vec3b>(cv::Point(x+1, y+1)) = cv::Vec3b (concentrationColor[0], concentrationColor[1], concentrationColor[2]);
+    concentrationMap.at<cv::Vec3b>(cv::Point(x, y-1)) = cv::Vec3b (concentrationColor[0], concentrationColor[1], concentrationColor[2]);
+    concentrationMap.at<cv::Vec3b>(cv::Point(x-1, y)) = cv::Vec3b (concentrationColor[0], concentrationColor[1], concentrationColor[2]);
+    concentrationMap.at<cv::Vec3b>(cv::Point(x-1, y-1)) = cv::Vec3b (concentrationColor[0], concentrationColor[1], concentrationColor[2]);
 
     cv::Mat concentrationMapImg = concentrationMap.clone();
 
     concentrationMapImg.at<cv::Vec3b>(cv::Point(x, y)) = cv::Vec3b (0, 0, 0);
+    concentrationMapImg.at<cv::Vec3b>(cv::Point(x, y+1)) = cv::Vec3b (0, 0, 0);
+    concentrationMapImg.at<cv::Vec3b>(cv::Point(x+1, y)) = cv::Vec3b (0, 0, 0);
+    concentrationMapImg.at<cv::Vec3b>(cv::Point(x+1, y+1)) = cv::Vec3b (0, 0, 0);
+
+    radarRadius = (radarRadius + 3) % 10;
+    cv::circle(concentrationMapImg, cv::Point(x, y), radarRadius, cv::Scalar(0, 0, 255), 1);
 
 
     cv::imshow(MAP_WINDOW_NAME, concentrationMapImg);

@@ -15,7 +15,7 @@ public:
         picked       = 0;
     };
 
-    ConcentrationZone(std::string regionId, float concentration, geometry_msgs::PoseStamped pose, float probability  = 0): region(region), concentration(concentration), pose(pose)
+    ConcentrationZone(std::string regionId, float concentration, geometry_msgs::PoseStamped pose, float probability  = 0): region(regionId), concentration(concentration), pose(pose)
     {
         picked      = 0;
     }
@@ -34,7 +34,7 @@ public:
 
     float getConcentration() const { return concentration;}
 
-    void setZone(std::string& zone) { region = zone; }
+    void setZone(std::string zone) { region = zone; }
 
     void setConcentration(float concentration){ this->concentration = concentration;}
 

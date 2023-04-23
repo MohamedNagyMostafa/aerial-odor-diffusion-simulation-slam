@@ -97,13 +97,18 @@ public:
 
         if(map.count(zone))
         {
+//            ROS_INFO_STREAM("Found existed one " << zone);
             std::shared_ptr<ConcentrationZone> obj;
 
             obj   = queue.remove(zone);
 
             obj->setConcentration(concentration);
+
+            map[zone]   = *obj;
+
             queue.push(obj);
             //TODO: Check here.
+
             return;
         }
         std::shared_ptr<ConcentrationZone> obj(new ConcentrationZone);
@@ -111,9 +116,10 @@ public:
         obj->setConcentration(concentration);
         obj->setZone(zone);
         obj->setPose(pose);
+//        ROS_INFO_STREAM("new one " << zone);
+        map[zone]   = *obj;
 
         queue.push(obj);
-        map[zone]   = *obj;
     }
 
     std::shared_ptr<ConcentrationZone> top() const
@@ -148,8 +154,9 @@ public:
 
             queue.pop();
         }
-
     }
+
+    int size() { return queue.size();}
 
     void updateProbabilityGraph() { queue.updateProbability();}
 
@@ -160,7 +167,7 @@ private:
 
     static void generateZoneToken(geometry_msgs::PoseStamped& pose, std::string& token)
     {
-        token = "x:" + std::to_string(pose.pose.position.x) + "y:" + std::to_string(pose.pose.position.y);
+        token = "x:" + std::to_string(Utils::round(pose.pose.position.x)) + "y:" + std::to_string(Utils::round(pose.pose.position.y));
     }
 };
 #endif //FIND_SOURCE_CONCENTRATIONPRIORITYQUEUE_H

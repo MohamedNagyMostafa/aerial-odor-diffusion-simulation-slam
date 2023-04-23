@@ -171,7 +171,6 @@ int main(int argc, char** argv)
 
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Concentration Probability Density"));
     viewer->addPointCloud<pcl::PointXYZRGB>(gaussianGridProbabilityDensity, "grid");
-    viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 10., "grid");
     viewer->addCoordinateSystem(0.5);
     viewer->initCameraParameters();
 
@@ -250,6 +249,7 @@ int main(int argc, char** argv)
                     queue.updateProbabilityGraph();
 
                     ROS_INFO_STREAM("max Concentration " << maxConcentrationNeighbor->getConcentration());
+                    ROS_INFO_STREAM("loc Concentration " << maxConcentrationNeighbor->getZone());
 
                     ROS_INFO_STREAM("Probability " << maxConcentrationNeighbor->getProbability());
 
@@ -311,6 +311,36 @@ void pclViewerResetAndDraw(pcl::visualization::PCLVisualizer::Ptr& viewer, pcl::
     viewer->removeAllShapes();
 
     viewer->addPointCloud<pcl::PointXYZRGB> (graph, "grid");
+    viewer->addCube(currPose.pose.position.x-1 + WORLD_BOUNDARY_MAX_X, currPose.pose.position.x+1 + WORLD_BOUNDARY_MAX_X,
+                    currPose.pose.position.y-1 + WORLD_BOUNDARY_MAX_Y, currPose.pose.position.y+1 + WORLD_BOUNDARY_MAX_Y,
+                    currPose.pose.position.z-1, currPose.pose.position.z,0,0, 1, "drone-box");
+
+    viewer->addCube(currPose.pose.position.x-1 + WORLD_BOUNDARY_MAX_X, currPose.pose.position.x+1 + WORLD_BOUNDARY_MAX_X,
+                    currPose.pose.position.y-1 + WORLD_BOUNDARY_MAX_Y, currPose.pose.position.y+1 + WORLD_BOUNDARY_MAX_Y,
+                    currPose.pose.position.z-1, currPose.pose.position.z,0,0, 1, "drone-fill");
+
+
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
+                                        pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME,
+                                        "drone-box");
+
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
+                                        0, 0, 1, "drone-box");
+
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, 1, "drone-box");
+
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
+                                        pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
+                                        "drone-fill");
+
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
+                                        0, 0, 1, "drone-fill");
+
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "drone-fill");
+
+
+    viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 10., "grid");
+
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 10., "grid");
 }
 /**
@@ -323,8 +353,8 @@ void jumpToNextGrid(const geometry_msgs::PoseStamped& location)
 //    targetPose.pose.position.y  = location.pose.position.y + 2 * (location.pose.position.y - targetPose.pose.position.y);
 //    targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
 
-    targetPose.pose.position.x  = location.pose.position.x + (location.pose.position.x - targetPose.pose.position.x);
-    targetPose.pose.position.y  = location.pose.position.y + (location.pose.position.y - targetPose.pose.position.y);
+    targetPose.pose.position.x  = location.pose.position.x;// + (location.pose.position.x - targetPose.pose.position.x);
+    targetPose.pose.position.y  = location.pose.position.y;// + (location.pose.position.y - targetPose.pose.position.y);
     targetPose.pose.position.z  = DRONE_TAKEOFF_ALTITUDE;
 }
 

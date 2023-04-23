@@ -56,7 +56,7 @@ namespace gazebo
          * Generate a mode with @param modelName name, and insert it to the world.
          * @param modelName model's name to be inserted.
          */
-        void generateModelByName_Add2World(std::string modelName);
+        void generateModelByName_Add2World(std::string modelName, float_t currentTime);
 
         /**
          * threading for gazebo simulation to update the environment status.
@@ -139,7 +139,7 @@ namespace gazebo
             static constexpr const char* MODEL          = "model";
             static constexpr const char* POSE           = "pose";
             static constexpr const char* CONCENTRATION  = "concentration";
-
+            static constexpr const char* INIT_TIME      = "init_time";
         };
 
         /**
